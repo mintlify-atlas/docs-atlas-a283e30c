@@ -1,0 +1,75 @@
+{
+  "projectType": "frontend",
+  "projectName": "Portfolio",
+  "projectDescription": "A modern Vue.js portfolio website showcasing developer work and skills with dark mode support.",
+  "theme": "palm",
+  "primaryColor": "#3B82F6",
+  "lightColor": "#60A5FA",
+  "darkColor": "#1E40AF",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "quickstart",
+          "features"
+        ]
+      },
+      {
+        "group": "Components",
+        "pages": [
+          "components/overview",
+          "components/cards",
+          "components/elements",
+          "components/layout",
+          "components/form"
+        ]
+      },
+      {
+        "group": "Customization",
+        "pages": [
+          "customization/theming",
+          "customization/dark-mode",
+          "customization/content"
+        ]
+      },
+      {
+        "group": "Deployment",
+        "pages": [
+          "deployment/build",
+          "deployment/netlify"
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Responsive Vue.js components with TailwindCSS styling",
+    "Dark/light mode toggle with persistent preferences",
+    "Animated typing effect for skills showcase",
+    "Project portfolio display with filtering",
+    "Resume/CV page with PDF generation",
+    "Contact form with submission handling",
+    "SEO-optimized with sitemap generation"
+  ],
+  "publicApiSurface": [
+    "Card - Feature card component with title and description",
+    "ExperienceCard - Experience timeline card component",
+    "SkillCard - Skill display card component",
+    "Button - Customizable button with variants (primary, secondary, ghost, transparent)",
+    "Text - Typography component with type variants",
+    "Icon - Ionicons wrapper component",
+    "Badge - Label/badge component",
+    "Input - Form input component",
+    "Textarea - Form textarea component",
+    "Section - Layout section container",
+    "Container - Layout container component",
+    "Stack - Flexbox stack layout",
+    "Navbar - Navigation bar component",
+    "Footer - Footer component",
+    "Animate - Animation wrapper using AOS",
+    "Projects - Project showcase section",
+    "References - References/testimonials section",
+    "BlobBackground - Animated background component"
+  ]
+}
