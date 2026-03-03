@@ -1,0 +1,362 @@
+---
+title: 'Form Components'
+description: 'Documentation for Input and Textarea form components'
+---
+
+# Form Components
+
+Form input components for collecting user data with consistent styling and validation support.
+
+## Input
+
+A text input field with label and validation support.
+
+### Usage
+
+```vue
+<script setup>
+import Input from '~/components/form/Input.vue'
+</script>
+
+<template>
+  <!-- Basic input -->
+  <Input
+    id="email"
+    label="Email Address"
+    type="email"
+    placeholder="you@example.com"
+  />
+
+  <!-- Required input -->
+  <Input
+    id="name"
+    label="Full Name"
+    type="text"
+    placeholder="John Doe"
+    :required="true"
+  />
+
+  <!-- Password input -->
+  <Input
+    id="password"
+    label="Password"
+    type="password"
+    placeholder="Enter your password"
+    :required="true"
+  />
+
+  <!-- Number input -->
+  <Input
+    id="age"
+    label="Age"
+    type="number"
+    placeholder="25"
+  />
+</template>
+```
+
+### Props
+
+<ParamField path="id" type="string" required>
+  Unique identifier for the input field. Used for both `id` and `name` attributes.
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label text displayed above the input field
+</ParamField>
+
+<ParamField path="type" type="string" default="text">
+  HTML input type (e.g., "text", "email", "password", "number", "tel", "url")
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder text shown when input is empty
+</ParamField>
+
+<ParamField path="required" type="boolean" default="false">
+  If `true`, marks the field as required with a red asterisk and HTML5 validation
+</ParamField>
+
+### Features
+
+- **Label with Required Indicator**: Red asterisk (*) shown when `required` is true
+- **Focus States**: Blue border on focus (`focus:border-blue-500`)
+- **Dark Mode**: Automatically adapts background and text colors
+- **Smooth Transitions**: 300ms transition on all state changes
+- **Full Width**: Takes up 100% of parent container
+- **Accessible**: Proper label-input association via `for` and `id`
+
+### Styling Classes
+
+The input uses comprehensive Tailwind classes:
+
+```vue
+<input
+  class="mt-1 w-full rounded-md border px-3 py-2 outline-0 ring-0 transition-all duration-300 focus:border-blue-500 dark:border-[#353a52] dark:bg-[#10172d] dark:text-gray-200 dark:focus:border-blue-800"
+/>
+```
+
+### Dark Mode Colors
+
+- **Border**: `dark:border-[#353a52]` → `dark:focus:border-blue-800`
+- **Background**: `dark:bg-[#10172d]`
+- **Text**: `dark:text-gray-200`
+
+### Label Implementation
+
+```vue
+<label :for="id" class="block text-sm font-medium leading-6 dark:text-white">
+  {{ label }} <span v-if="required" class="text-red-500">*</span>
+</label>
+```
+
+### Source Reference
+
+Location: `~/workspace/source/components/form/Input.vue:1`
+
+---
+
+## Textarea
+
+A multi-line text input field for longer content.
+
+### Usage
+
+```vue
+<script setup>
+import Textarea from '~/components/form/Textarea.vue'
+</script>
+
+<template>
+  <!-- Basic textarea -->
+  <Textarea
+    id="message"
+    label="Message"
+    placeholder="Enter your message here..."
+  />
+
+  <!-- Required textarea -->
+  <Textarea
+    id="description"
+    label="Project Description"
+    placeholder="Describe your project in detail"
+    :required="true"
+  />
+</template>
+```
+
+### Props
+
+<ParamField path="id" type="string" required>
+  Unique identifier for the textarea field. Used for both `id` and `name` attributes.
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label text displayed above the textarea
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder text shown when textarea is empty
+</ParamField>
+
+<ParamField path="required" type="boolean" default="false">
+  If `true`, marks the field as required with a red asterisk and HTML5 validation
+</ParamField>
+
+### Features
+
+- **Fixed Height**: 5 rows by default (`rows="5"`)
+- **Consistent Styling**: Matches Input component styling
+- **Label with Required Indicator**: Red asterisk shown when required
+- **Focus States**: Blue border on focus
+- **Dark Mode**: Automatic color adaptation
+- **Full Width**: 100% width of parent container
+- **Resizable**: Browser default resize behavior (can be controlled with CSS)
+
+### Styling Classes
+
+Identical to Input component for visual consistency:
+
+```vue
+<textarea
+  class="mt-1 w-full rounded-md border px-3 py-2 outline-0 ring-0 transition-all duration-300 focus:border-blue-500 dark:border-[#353a52] dark:bg-[#10172d] dark:text-gray-200 dark:focus:border-blue-800"
+  rows="5"
+/>
+```
+
+### Source Reference
+
+Location: `~/workspace/source/components/form/Textarea.vue:1`
+
+## Form Validation Example
+
+Here's how to use both components in a complete form:
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import Input from '~/components/form/Input.vue'
+import Textarea from '~/components/form/Textarea.vue'
+import Button from '~/components/elements/Button.vue'
+import Stack from '~/components/layout/Stack.vue'
+
+const handleSubmit = () => {
+  // Form submission logic
+}
+</script>
+
+<template>
+  <form @submit.prevent="handleSubmit">
+    <Stack :spacing="4">
+      <Input
+        id="name"
+        label="Name"
+        type="text"
+        placeholder="Your name"
+        :required="true"
+      />
+      
+      <Input
+        id="email"
+        label="Email"
+        type="email"
+        placeholder="you@example.com"
+        :required="true"
+      />
+      
+      <Input
+        id="subject"
+        label="Subject"
+        type="text"
+        placeholder="What's this about?"
+      />
+      
+      <Textarea
+        id="message"
+        label="Message"
+        placeholder="Your message..."
+        :required="true"
+      />
+      
+      <Button type="primary" size="full">
+        Send Message
+      </Button>
+    </Stack>
+  </form>
+</template>
+```
+
+## Accessibility
+
+Both components follow accessibility best practices:
+
+### Label Association
+
+Every input has a properly associated label:
+
+```vue
+<label :for="id">{{ label }}</label>
+<input :id="id" :name="id" />
+```
+
+### Required Fields
+
+Required fields are indicated both visually and semantically:
+
+- Visual: Red asterisk in label
+- Semantic: `required` attribute on input element
+
+### Focus Management
+
+- Clear focus states with blue borders
+- No `outline-0` without alternative focus indication
+- Keyboard navigation fully supported
+
+## Customization
+
+### Disable Resize on Textarea
+
+Add a class to prevent resizing:
+
+```vue
+<Textarea
+  id="message"
+  label="Message"
+  class="resize-none"
+/>
+```
+
+### Custom Styling
+
+Both components accept additional classes:
+
+```vue
+<Input
+  id="email"
+  label="Email"
+  class="custom-input"
+/>
+```
+
+### Validation States
+
+For custom validation feedback, wrap in a container:
+
+```vue
+<div>
+  <Input
+    id="email"
+    label="Email"
+    type="email"
+    :required="true"
+  />
+  <p v-if="emailError" class="mt-1 text-sm text-red-500">
+    {{ emailError }}
+  </p>
+</div>
+```
+
+## Best Practices
+
+### Input Component
+
+- Always provide a descriptive `label`
+- Use appropriate `type` for the data being collected
+- Use `placeholder` for examples, not instructions
+- Mark truly required fields with `:required="true"`
+- Provide clear error messages for validation failures
+
+### Textarea Component
+
+- Use for content longer than one line
+- Set appropriate `placeholder` to guide users
+- Consider adding `maxlength` attribute for character limits
+- Provide character count for limited-length fields
+
+### Form Design
+
+- Group related fields together
+- Use Stack component for consistent spacing
+- Place submit button at the end
+- Provide feedback on submission (success/error)
+- Disable submit button during processing
+- Clear form after successful submission
+
+## TypeScript Support
+
+Both components use `<script setup lang="ts">` for TypeScript support:
+
+```typescript
+defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+  label: {
+    type: String,
+  },
+  // ... other props
+})
+```
+
+This provides IDE autocomplete and type checking for props.

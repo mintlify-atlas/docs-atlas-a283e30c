@@ -1,0 +1,241 @@
+---
+title: 'Card Components'
+description: 'Documentation for Card, ExperienceCard, and SkillCard components'
+---
+
+# Card Components
+
+Card components provide structured, visually distinct content containers for displaying information.
+
+## Card
+
+A generic card component with animated hover effects, displaying a title and description.
+
+### Usage
+
+```vue
+<script setup>
+import Card from '~/components/cards/Card.vue'
+</script>
+
+<template>
+  <Card
+    title="Web Development"
+    description="Building modern web applications"
+  />
+</template>
+```
+
+### Props
+
+<ParamField path="title" type="string">
+  The card title displayed prominently at the top
+</ParamField>
+
+<ParamField path="description" type="string">
+  The descriptive text shown below the title
+</ParamField>
+
+### Features
+
+- **Hover Animation**: Background changes from white to blue on hover
+- **Decorative SVG**: Circle pattern in top-right corner
+- **Dot Pattern**: Appears in bottom-left on hover
+- **Dark Mode**: Automatically adapts with `dark:bg-blue-900/50`
+- **Group Hover**: Uses Tailwind's `group` and `group-hover` for coordinated animations
+
+### Source Reference
+
+Location: `~/workspace/source/components/cards/Card.vue:1`
+
+---
+
+## ExperienceCard
+
+A specialized card for displaying work experience entries with company information, job details, and technologies.
+
+### Usage
+
+```vue
+<script setup>
+import ExperienceCard from '~/components/cards/ExperienceCard.vue'
+</script>
+
+<template>
+  <ExperienceCard
+    image="company-logo.png"
+    company="Tech Corp"
+    job="Senior Developer"
+    period="2020 - 2024"
+    description="Led development of customer-facing applications using modern web technologies. Implemented CI/CD pipelines and mentored junior developers."
+    :technologies="['Vue.js', 'TypeScript', 'Node.js', 'Docker']"
+    :right="false"
+  />
+</template>
+```
+
+### Props
+
+<ParamField path="image" type="string">
+  Filename of the company logo (stored in `/images/companies/`)
+</ParamField>
+
+<ParamField path="company" type="string">
+  Company name displayed with the logo
+</ParamField>
+
+<ParamField path="job" type="string">
+  Job title or role
+</ParamField>
+
+<ParamField path="period" type="string">
+  Time period of employment (e.g., "2020 - 2024")
+</ParamField>
+
+<ParamField path="description" type="string">
+  Detailed description of responsibilities and achievements
+</ParamField>
+
+<ParamField path="technologies" type="array">
+  Array of technology names to display as badges
+</ParamField>
+
+<ParamField path="right" type="boolean" default="false">
+  If `true`, aligns content to the right side (useful for timeline layouts)
+</ParamField>
+
+### Features
+
+- **Text Truncation**: Shows first 100 characters with "Voir plus" (Show more) button
+- **Expandable Content**: Click to reveal full description
+- **Technology Badges**: Displays technologies using the `Badge` component
+- **Responsive Layout**: Single column on mobile, side-aligned on desktop
+- **Timeline Integration**: Includes decorative circle for timeline UI
+- **Animation**: Wrapped in `AnimateOnScroll` component
+
+### Implementation Details
+
+The component uses reactive state to manage text expansion:
+
+```vue
+<script setup>
+import { ref } from 'vue'
+const showFullText = ref(false)
+</script>
+```
+
+Company logo is displayed inline with the company name:
+
+```vue
+<NuxtImg
+  v-if="image"
+  class="mr-2 inline w-6"
+  :src="`/images/companies/${image}`"
+  :alt="company"
+/>
+```
+
+### Source Reference
+
+Location: `~/workspace/source/components/cards/ExperienceCard.vue:1`
+
+---
+
+## SkillCard
+
+A card component for displaying skill categories with an icon and a list of related skills.
+
+### Usage
+
+```vue
+<script setup>
+import SkillCard from '~/components/cards/SkillCard.vue'
+</script>
+
+<template>
+  <SkillCard
+    icon="code-slash"
+    color="blue"
+    title="Frontend Development"
+    :skills="[
+      'Vue.js',
+      'React',
+      'TypeScript',
+      'Tailwind CSS',
+      'Nuxt.js',
+      'Next.js'
+    ]"
+    :last="false"
+  />
+</template>
+```
+
+### Props
+
+<ParamField path="icon" type="string">
+  Ionicon name (without `-outline` suffix)
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color theme for the icon (currently supports blue)
+</ParamField>
+
+<ParamField path="title" type="string">
+  Skill category title
+</ParamField>
+
+<ParamField path="skills" type="array">
+  Array of skill names to display in a grid
+</ParamField>
+
+<ParamField path="last" type="boolean" default="false">
+  If `true`, removes the border (useful for last item in a row)
+</ParamField>
+
+### Features
+
+- **Icon Display**: Large Ionicon with colored background
+- **Grid Layout**: Skills displayed in 2-column grid
+- **Alternating Alignment**: Odd items align right, even items align left
+- **Border Control**: Conditional borders for flexible layouts
+- **Dark Mode**: Icon background adapts with `dark:bg-blue-400`
+
+### Layout Structure
+
+Skills are displayed in a responsive grid:
+
+```vue
+<div class="mb-2 grid grid-cols-2 gap-x-5 gap-y-2 pb-4 lg:pb-0">
+  <template v-for="(skill, index) in skills" :key="index">
+    <Text :class="index % 2 ? 'text-left' : 'text-right'">
+      {{ skill }}
+    </Text>
+  </template>
+</div>
+```
+
+### Source Reference
+
+Location: `~/workspace/source/components/cards/SkillCard.vue:1`
+
+## Best Practices
+
+### Card Component
+
+- Keep titles concise (2-4 words)
+- Descriptions should be 1-2 sentences
+- Test hover states in both light and dark modes
+
+### ExperienceCard Component
+
+- Use meaningful period strings (e.g., "Jan 2020 - Present")
+- Limit description to 200-300 characters for optimal UX
+- Include 3-6 relevant technologies
+- Alternate `right` prop for timeline layouts
+
+### SkillCard Component
+
+- Group related skills logically
+- Use 4-8 skills per card for best visual balance
+- Choose icons that represent the skill category clearly
+- Set `last={true}` on rightmost cards to remove borders

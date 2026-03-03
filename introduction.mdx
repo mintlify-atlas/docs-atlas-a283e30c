@@ -1,0 +1,216 @@
+---
+title: Introduction
+description: Welcome to the Vue.js Portfolio documentation. Learn how this modern, full-stack portfolio website showcases your work beautifully.
+---
+
+<img
+  className="block dark:hidden"
+  src="/images/hero-light.svg"
+  alt="Portfolio Hero Light"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/hero-dark.svg"
+  alt="Portfolio Hero Dark"
+/>
+
+## Overview
+
+This is a modern, full-stack portfolio website built with **Nuxt 3** and **Vue.js**. It's designed to showcase your professional work, skills, and experience in an elegant and interactive way.
+
+The portfolio features a fully responsive design with dark mode support, animated sections, and a contact form integrated with Netlify. Perfect for developers, designers, and freelancers looking to make a strong online presence.
+
+<CardGroup cols={2}>
+  <Card
+    title="Modern Stack"
+    icon="layer-group"
+    href="/features"
+  >
+    Built with Nuxt 3, Vue.js, and TailwindCSS for a fast, modern experience
+  </Card>
+  <Card
+    title="Quick Setup"
+    icon="bolt"
+    href="/quickstart"
+  >
+    Get up and running in minutes with simple installation steps
+  </Card>
+  <Card
+    title="Customizable"
+    icon="palette"
+  >
+    Easy to customize components, content, and styling to match your brand
+  </Card>
+  <Card
+    title="Production Ready"
+    icon="rocket"
+  >
+    Deployed on Netlify with optimized builds and automated deployments
+  </Card>
+</CardGroup>
+
+## Key Features
+
+<AccordionGroup>
+  <Accordion title="Dark/Light Mode Toggle">
+    Automatic theme switching with `@nuxtjs/color-mode` module. Users can toggle between light and dark themes with a beautiful animated transition.
+
+    ```vue
+    <button
+      @click="$colorMode.preference = $colorMode.value === 'light' ? 'dark' : 'light'"
+    >
+      <Icon v-if="$colorMode.value === 'light'" name="moon" />
+      <Icon v-else name="sunny" />
+    </button>
+    ```
+  </Accordion>
+
+  <Accordion title="Animated Typing Effect">
+    Eye-catching hero section with a typing animation powered by Typed.js, cycling through your key skills.
+
+    ```javascript
+    const skills = ['Full-stack', 'Laravel', 'VueJS', 'PHP', 'JS']
+
+    const typed = new Typed('.typed', {
+      strings: skills,
+      typeSpeed: 150,
+      loop: true,
+    })
+    ```
+  </Accordion>
+
+  <Accordion title="Project Showcase">
+    Filterable project gallery with categories (websites, web applications, resources). Each project displays screenshots, descriptions, and technologies used.
+  </Accordion>
+
+  <Accordion title="Contact Form">
+    Integrated Netlify Forms with reCAPTCHA protection for spam prevention. Includes honeypot field for additional bot protection.
+
+    ```html
+    <form
+      name="contact"
+      method="POST"
+      action="/contact-submission"
+      data-netlify-recaptcha="true"
+      netlify-honeypot="bot-field"
+      data-netlify="true"
+    >
+      <!-- Form fields -->
+    </form>
+    ```
+  </Accordion>
+
+  <Accordion title="Responsive CV/Resume">
+    Dedicated CV page with downloadable PDF version. Displays your experience, education, skills, and contact information in a professional layout.
+  </Accordion>
+</AccordionGroup>
+
+## Technology Stack
+
+The portfolio is built with modern web technologies:
+
+<CodeGroup>
+
+```json package.json
+{
+  "dependencies": {
+    "nuxt": "^3.10.3",
+    "vue": "^3.4.21",
+    "typed.js": "^2.1.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.11.4",
+    "@nuxtjs/color-mode": "^3.3.3",
+    "@nuxt/image": "^1.4.0",
+    "nuxt-aos": "^1.2.4"
+  }
+}
+```
+
+```typescript nuxt.config.ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxtjs/tailwindcss',
+    'nuxt-aos',
+    '@nuxt/image',
+    '@nuxtjs/sitemap',
+    '@nuxtjs/color-mode',
+  ],
+  colorMode: {
+    classSuffix: '',
+  },
+})
+```
+
+</CodeGroup>
+
+<CardGroup cols={3}>
+  <Card title="Nuxt 3" icon="n">
+    Full-stack Vue.js framework with SSR
+  </Card>
+  <Card title="TailwindCSS" icon="wind">
+    Utility-first CSS framework
+  </Card>
+  <Card title="Typed.js" icon="keyboard">
+    JavaScript typing animation
+  </Card>
+  <Card title="Ionicons" icon="cube">
+    Premium icon set
+  </Card>
+  <Card title="Netlify" icon="cloud">
+    Deployment & form handling
+  </Card>
+  <Card title="AOS" icon="star">
+    Animate on scroll library
+  </Card>
+</CardGroup>
+
+## What's Included
+
+<Steps>
+  <Step title="Hero Section">
+    Eye-catching landing with your name, role, and animated skill rotation
+  </Step>
+  <Step title="About Section">
+    Introduction with your background, experience stats, and contact details
+  </Step>
+  <Step title="Experience Timeline">
+    Professional and educational experience with company logos and descriptions
+  </Step>
+  <Step title="Skills Section">
+    Organized skill cards for Development, Tools, and Workflow
+  </Step>
+  <Step title="Projects Gallery">
+    Filterable project showcase with images and technology badges
+  </Step>
+  <Step title="Contact Form">
+    Netlify-powered form with validation and spam protection
+  </Step>
+</Steps>
+
+## Live Demo
+
+Check out the live portfolio at [guillaume-cazin.fr](https://www.guillaume-cazin.fr/)
+
+<Note>
+  The portfolio is optimized for performance with lazy-loaded images, code splitting, and automatic optimization via Nuxt 3's build system.
+</Note>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Quick Start"
+    icon="play"
+    href="/quickstart"
+  >
+    Get the portfolio running on your local machine
+  </Card>
+  <Card
+    title="Explore Features"
+    icon="compass"
+    href="/features"
+  >
+    Deep dive into all the portfolio features
+  </Card>
+</CardGroup>

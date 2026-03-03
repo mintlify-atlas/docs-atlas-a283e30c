@@ -1,0 +1,125 @@
+---
+title: 'Component Library Overview'
+description: 'A comprehensive overview of the Vue.js component library for the portfolio website'
+---
+
+# Component Library
+
+This portfolio website is built with a custom Vue.js component library that provides reusable, styled components for building modern web interfaces. The library is organized into four main categories:
+
+## Component Categories
+
+### Cards
+
+Card components provide structured content containers with pre-styled layouts:
+
+- **Card** - Generic card with title and description
+- **ExperienceCard** - Timeline card for work experiences with company info and technologies
+- **SkillCard** - Skill category card with icon and skill list
+
+[View Cards Documentation →](/components/cards)
+
+### Elements
+
+Basic UI elements that form the foundation of the interface:
+
+- **Button** - Primary interactive element with multiple variants
+- **Text** - Typography component with semantic types
+- **Icon** - Icon wrapper using Ionicons
+- **Badge** - Label component for tags and status indicators
+- **Link** - Router-enabled link component
+
+[View Elements Documentation →](/components/elements)
+
+### Layout
+
+Structural components for page organization:
+
+- **Section** - Full-width section with optional backgrounds and heading
+- **Container** - Centered content container with max-width
+- **Stack** - Vertical spacing utility component
+- **Navbar** - Fixed navigation bar with mobile support
+- **Footer** - Site footer with social links
+- **Col** - Column layout component
+
+[View Layout Documentation →](/components/layout)
+
+### Forms
+
+Input components for user interaction:
+
+- **Input** - Text input field with label
+- **Textarea** - Multi-line text input
+
+[View Forms Documentation →](/components/form)
+
+## Design System
+
+The component library follows a consistent design system:
+
+### Colors
+
+- **Primary**: Blue (`blue-500`, `blue-600`, `blue-700`, `blue-800`)
+- **Background**: Slate shades with dark mode support
+- **Text**: Gray scale with dark mode variants
+
+### Dark Mode
+
+All components support dark mode using Tailwind's `dark:` variants. The color scheme automatically adapts based on user preference.
+
+### Styling Approach
+
+- **Utility-first**: Uses Tailwind CSS for styling
+- **Scoped styles**: Component-specific styles are scoped
+- **Responsive**: Mobile-first design with `lg:` breakpoint variants
+- **Transitions**: Smooth animations using `transition-all` and `duration-*` utilities
+
+## Usage Pattern
+
+Components are imported directly from their respective directories:
+
+```vue
+<script setup>
+import Button from '~/components/elements/Button.vue'
+import Card from '~/components/cards/Card.vue'
+import Section from '~/components/layout/Section.vue'
+</script>
+
+<template>
+  <Section title="My Section">
+    <Card 
+      title="Example Card" 
+      description="This is a card component"
+    />
+    <Button type="primary">Click Me</Button>
+  </Section>
+</template>
+```
+
+## Component Philosophy
+
+### Composition
+
+Components are designed to be composable - complex UI patterns are built by combining simpler components.
+
+### Slots
+
+Most components support default slots for flexible content insertion:
+
+```vue
+<Button type="primary">
+  <Icon name="download" /> Download
+</Button>
+```
+
+### Props
+
+Components use Vue 3's `defineProps` with type definitions for prop validation and IDE support.
+
+## Iconography
+
+The library uses [Ionicons](https://ionic.io/ionicons) for icon graphics. Icons are accessed through the `Icon` component or directly via `<ion-icon>` tags.
+
+```vue
+<Icon name="logo-github" :outline="false" size="xl" />
+```

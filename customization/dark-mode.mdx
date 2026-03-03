@@ -1,0 +1,249 @@
+---
+title: 'Dark Mode'
+description: 'Learn how dark mode works and how to customize it in your portfolio'
+---
+
+The portfolio includes a fully functional dark mode implementation using Nuxt Color Mode module.
+
+## Dark Mode Configuration
+
+Dark mode is configured in `nuxt.config.ts` with the `@nuxtjs/color-mode` module:
+
+```typescript
+colorMode: {
+    classSuffix: '',
+},
+modules: [
+    '@nuxtjs/tailwindcss',
+    'nuxt-aos',
+    '@nuxt/image',
+    '@nuxtjs/sitemap',
+    '@nuxtjs/color-mode',
+],
+```
+
+The `classSuffix: ''` option means the dark mode class is simply `dark` instead of `dark-mode`.
+
+## Tailwind Dark Mode
+
+Tailwind is configured to use class-based dark mode in `tailwind.config.js`:
+
+```javascript
+export default {
+    darkMode: 'class',
+    // ... rest of config
+}
+```
+
+This means dark mode styles are applied when a `dark` class is present on a parent element (typically `<html>` or `<body>`).
+
+## Dark Mode Toggle
+
+The dark mode toggle is implemented in the navbar (`components/layout/Navbar.vue:84-103`):
+
+```vue
+<button
+    class="flex gap-2 rounded-xl bg-gray-100 dark:bg-gray-900"
+    @click="
+        $colorMode.preference =
+            $colorMode.value === 'light' ? 'dark' : 'light'
+    "
+>
+    <Icon
+        v-if="$colorMode.value === 'light'"
+        class="cursor-pointer rounded-lg bg-gray-100 p-1 px-2 py-1.5 text-xl text-gray-500 hover:bg-gray-300 dark:bg-gray-300"
+        name="moon"
+        :outline="false"
+    ></Icon>
+    <Icon
+        v-else
+        class="cursor-pointer rounded-lg bg-yellow-50 p-1 px-2 py-1.5 text-xl text-yellow-500 dark:bg-gray-700"
+        name="sunny"
+        :outline="false"
+    ></Icon>
+</button>
+```
+
+## Using Dark Mode in Components
+
+Apply dark mode styles using the `dark:` prefix in Tailwind classes:
+
+```vue
+<div class="bg-white dark:bg-gray-800">
+    <h1 class="text-gray-900 dark:text-white">Hello World</h1>
+    <p class="text-gray-600 dark:text-gray-300">Description text</p>
+</div>
+```
+
+## Common Dark Mode Patterns
+
+### Background Colors
+
+From `app.vue:11`:
+```vue
+<Body class="bg-white bg-repeat dark:bg-gray-800">
+    <NuxtPage />
+</Body>
+```
+
+### Text Colors
+
+From `pages/index.vue:90-93`:
+```vue
+<span class="text-7xl font-extrabold tracking-tight text-blue-500 dark:text-blue-700 lg:text-8xl">
+    Guillaume
+</span>
+```
+
+### Card Backgrounds
+
+From `components/misc/Projects.vue:219`:
+```vue
+<div class="flex w-full flex-1 flex-col gap-1 rounded-lg bg-white px-6 py-4 shadow-sm dark:bg-gray-800/30">
+    <!-- Card content -->
+</div>
+```
+
+### Icons and Accents
+
+From `pages/index.vue:180-182`:
+```vue
+<Icon
+    :outline="false"
+    name="home"
+    class="mr-2 text-blue-500"
+/>
+```
+
+## Customizing Dark Mode Colors
+
+Create a consistent dark mode palette by extending your Tailwind config:
+
+```javascript
+theme: {
+    extend: {
+        colors: {
+            dark: {
+                bg: '#1a202c',
+                surface: '#2d3748',
+                border: '#4a5568',
+            },
+        },
+    },
+},
+```
+
+Then use these custom colors:
+
+```vue
+<div class="bg-white dark:bg-dark-bg">
+    <div class="border border-gray-200 dark:border-dark-border">
+        <!-- Content -->
+    </div>
+</div>
+```
+
+## Color Mode Composable
+
+Access the color mode in your components using the composable:
+
+```vue
+<script setup>
+const colorMode = useColorMode()
+
+// Get current mode
+console.log(colorMode.value) // 'light' or 'dark'
+
+// Set mode
+colorMode.preference = 'dark'
+
+// Check preference
+if (colorMode.preference === 'system') {
+    // User prefers system setting
+}
+</script>
+```
+
+## System Preference
+
+By default, Nuxt Color Mode respects the user's system preference. You can configure this:
+
+```typescript
+colorMode: {
+    classSuffix: '',
+    preference: 'system', // default value
+    fallback: 'light', // fallback value if no system preference
+},
+```
+
+## Transition Effects
+
+Add smooth transitions when switching between modes:
+
+```css
+/* In your main.css */
+html {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+* {
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+```
+
+Or using Tailwind:
+
+```vue
+<div class="bg-white transition-colors duration-300 dark:bg-gray-800">
+    <!-- Content -->
+</div>
+```
+
+## Dark Mode Images
+
+For images that need different versions in light/dark mode:
+
+```vue
+<template>
+    <!-- Light mode image -->
+    <NuxtImg
+        v-if="$colorMode.value === 'light'"
+        src="/images/logo-light.png"
+        alt="Logo"
+    />
+    
+    <!-- Dark mode image -->
+    <NuxtImg
+        v-else
+        src="/images/logo-dark.png"
+        alt="Logo"
+    />
+</template>
+```
+
+Or use CSS filters:
+
+```vue
+<NuxtImg
+    src="/images/logo.png"
+    class="dark:invert"
+    alt="Logo"
+/>
+```
+
+## Testing Dark Mode
+
+Test your dark mode implementation:
+
+1. Toggle using the navbar button
+2. Check browser DevTools for the `dark` class on `<html>`
+3. Test with system dark mode enabled
+4. Clear localStorage and refresh to test default preference
+
+## Debugging Tips
+
+- Check if the `dark` class is being applied to the HTML element
+- Ensure Tailwind dark mode is set to `'class'` not `'media'`
+- Verify `@nuxtjs/color-mode` is in the modules array
+- Check browser localStorage for `nuxt-color-mode` key
+- Use browser DevTools to inspect computed styles

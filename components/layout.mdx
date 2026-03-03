@@ -1,0 +1,452 @@
+---
+title: 'Layout Components'
+description: 'Documentation for Section, Container, Stack, Navbar, Footer, and Col components'
+---
+
+# Layout Components
+
+Structural components that organize content and provide consistent page layouts.
+
+## Section
+
+A full-width section component with optional backgrounds, headings, and decorative elements.
+
+### Usage
+
+```vue
+<script setup>
+import Section from '~/components/layout/Section.vue'
+</script>
+
+<template>
+  <!-- Basic section -->
+  <Section 
+    id="about" 
+    heading="INTRODUCTION" 
+    title="About Me"
+    description="Learn more about my background and experience"
+  >
+    <p>Section content goes here</p>
+  </Section>
+
+  <!-- Section with background -->
+  <Section
+    id="projects"
+    title="My Projects"
+    :hasBackground="true"
+    :hasBlobBackground="true"
+  >
+    <div class="grid grid-cols-3 gap-4">
+      <!-- Project cards -->
+    </div>
+  </Section>
+
+  <!-- Full-height section -->
+  <Section
+    id="hero"
+    :fullSize="true"
+  >
+    <div class="flex items-center justify-center h-full">
+      <!-- Hero content -->
+    </div>
+  </Section>
+</template>
+```
+
+### Props
+
+<ParamField path="id" type="string">
+  HTML id attribute for anchor links and navigation
+</ParamField>
+
+<ParamField path="heading" type="string">
+  Small uppercase heading displayed above the title (rendered with Text component type="heading")
+</ParamField>
+
+<ParamField path="title" type="string">
+  Main section title (rendered with Text component type="title")
+</ParamField>
+
+<ParamField path="titleSelector" type="string">
+  Override the default HTML element for the title (e.g., "h1")
+</ParamField>
+
+<ParamField path="description" type="string">
+  Descriptive text displayed below the title
+</ParamField>
+
+<ParamField path="fullSize" type="boolean" default="false">
+  If `true`, section takes full viewport height (h-screen)
+</ParamField>
+
+<ParamField path="hasBackground" type="boolean" default="false">
+  If `true`, uses darker background variant (`bg-slate-100 dark:bg-[#0B1120]/95`)
+</ParamField>
+
+<ParamField path="hasBlobBackground" type="boolean" default="false">
+  If `true`, renders decorative blob background graphic
+</ParamField>
+
+<ParamField path="blobBackgroundIsInverted" type="boolean" default="false">
+  Controls blob background color inversion
+</ParamField>
+
+### Features
+
+- **Decorative Graphics**: Includes SVG blob tear graphics positioned absolutely
+- **Pattern Background**: Subtle dot pattern overlay
+- **Container Integration**: Wraps content in Container component
+- **Centered Headers**: Title, heading, and description centered by default
+- **Responsive Spacing**: `py-8 lg:py-24` for vertical padding
+- **Border Top**: Visual separation with `border-t border-gray-200 dark:border-gray-800`
+
+### Background Pattern
+
+The component includes a subtle SVG dot pattern:
+
+```css
+.background {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23f1f5f9' fill-opacity='0.07' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+}
+```
+
+### Source Reference
+
+Location: `~/workspace/source/components/layout/Section.vue:1`
+
+---
+
+## Container
+
+A simple centered container with max-width constraints.
+
+### Usage
+
+```vue
+<script setup>
+import Container from '~/components/layout/Container.vue'
+</script>
+
+<template>
+  <Container>
+    <h1>Page Content</h1>
+    <p>This content is centered and constrained.</p>
+  </Container>
+</template>
+```
+
+### Features
+
+- **Centered**: Uses `m-auto` for horizontal centering
+- **Responsive Width**: `w-10/12` on mobile, `xl:w-8/12` on extra-large screens
+- **Overflow Hidden**: Prevents content overflow
+- **Simple Implementation**: Minimal wrapper component
+
+### Implementation
+
+```vue
+<template>
+  <div class="m-auto w-10/12 overflow-hidden xl:w-8/12">
+    <slot></slot>
+  </div>
+</template>
+```
+
+### Source Reference
+
+Location: `~/workspace/source/components/layout/Container.vue:1`
+
+---
+
+## Stack
+
+A utility component for adding consistent vertical spacing between child elements.
+
+### Usage
+
+```vue
+<script setup>
+import Stack from '~/components/layout/Stack.vue'
+</script>
+
+<template>
+  <!-- Default spacing -->
+  <Stack>
+    <h2>Title</h2>
+    <p>Paragraph 1</p>
+    <p>Paragraph 2</p>
+  </Stack>
+
+  <!-- Custom spacing -->
+  <Stack :spacing="8">
+    <div>Item 1</div>
+    <div>Item 2</div>
+    <div>Item 3</div>
+  </Stack>
+</template>
+```
+
+### Props
+
+<ParamField path="spacing" type="string | number" default="4">
+  Tailwind spacing value for vertical gaps (generates `space-y-{spacing}` and `gap-y-{spacing}`)
+</ParamField>
+
+### Implementation
+
+Generates dynamic spacing classes:
+
+```javascript
+const size = computed(() => {
+  return `space-y-${props.spacing} gap-y-${props.spacing}`
+})
+```
+
+```vue
+<template>
+  <section :class="size">
+    <slot />
+  </section>
+</template>
+```
+
+### Source Reference
+
+Location: `~/workspace/source/components/layout/Stack.vue:1`
+
+---
+
+## Navbar
+
+A fixed navigation bar with mobile menu, dark mode toggle, and logo.
+
+### Usage
+
+```vue
+<script setup>
+import Navbar from '~/components/layout/Navbar.vue'
+</script>
+
+<template>
+  <Navbar />
+</template>
+```
+
+### Features
+
+- **Fixed Position**: Stays at top with `fixed top-0 z-50`
+- **Backdrop Blur**: Modern glass effect with `backdrop-blur-md`
+- **Responsive Menu**: Hamburger menu on mobile, horizontal nav on desktop
+- **Dark Mode Toggle**: Sun/moon icon button
+- **Logo Display**: Image with optional text on larger screens
+- **Active Link Highlighting**: Uses `router-link-active` class
+
+### Navigation Items
+
+The component includes hardcoded navigation:
+
+```javascript
+const items = [
+  { url: '#introduction', text: 'À propos' },
+  { url: '#experiences', text: 'Expériences' },
+  { url: '#competences', text: 'Compétences' },
+  { url: '#projets', text: 'Projets' },
+  { url: '#contact', text: 'Contact' },
+]
+```
+
+### Mobile Menu
+
+The mobile menu is controlled by reactive state:
+
+```javascript
+const menuMobileVisible = ref(false)
+
+const toggleNavbar = () => {
+  menuMobileVisible.value = !menuMobileVisible.value
+}
+```
+
+### Dark Mode Toggle
+
+Integrates with Nuxt Color Mode:
+
+```vue
+<button
+  @click="$colorMode.preference = $colorMode.value === 'light' ? 'dark' : 'light'"
+>
+  <Icon v-if="$colorMode.value === 'light'" name="moon" :outline="false" />
+  <Icon v-else name="sunny" :outline="false" />
+</button>
+```
+
+### Source Reference
+
+Location: `~/workspace/source/components/layout/Navbar.vue:1`
+
+---
+
+## Footer
+
+Site footer with social media links and legal information.
+
+### Usage
+
+```vue
+<script setup>
+import Footer from '~/components/layout/Footer.vue'
+</script>
+
+<template>
+  <!-- Standard footer -->
+  <Footer />
+
+  <!-- Footer with background -->
+  <Footer :hasBackground="true" />
+</template>
+```
+
+### Props
+
+<ParamField path="hasBackground" type="boolean" default="false">
+  If `true`, uses darker background variant to match sections
+</ParamField>
+
+### Features
+
+- **Social Links**: LinkedIn, GitHub, CodePen with icons
+- **Copyright**: Dynamic year using `new Date().getFullYear()`
+- **Legal Links**: Privacy Policy and Legal Notice
+- **Responsive Layout**: Stacked on mobile, side-by-side on desktop
+- **Icon Integration**: Uses Icon component for social media
+
+### Social Media Links
+
+Hardcoded social links:
+
+```vue
+<NuxtLink target="_blank" to="https://www.linkedin.com/in/guillaume-cazin/">
+  <Icon class="text-xl" name="logo-linkedin" :outline="false" />
+</NuxtLink>
+<NuxtLink target="_blank" to="http://github.com/gcazin">
+  <Icon class="text-xl" name="logo-github" :outline="false" />
+</NuxtLink>
+<NuxtLink target="_blank" to="https://codepen.io/gcazin">
+  <Icon class="text-xl" name="logo-codepen" :outline="false" />
+</NuxtLink>
+```
+
+### Source Reference
+
+Location: `~/workspace/source/components/layout/Footer.vue:1`
+
+---
+
+## Col
+
+A column layout component using slots for flexible multi-column layouts.
+
+### Usage
+
+```vue
+<script setup>
+import Col from '~/components/layout/Col.vue'
+</script>
+
+<template>
+  <!-- Two columns -->
+  <Col :number="2">
+    <template #1>
+      <div>Column 1 content</div>
+    </template>
+    <template #2>
+      <div>Column 2 content</div>
+    </template>
+  </Col>
+
+  <!-- Three columns -->
+  <Col :number="3">
+    <template #1>
+      <div>First</div>
+    </template>
+    <template #2>
+      <div>Second</div>
+    </template>
+    <template #3>
+      <div>Third</div>
+    </template>
+  </Col>
+</template>
+```
+
+### Props
+
+<ParamField path="number" type="number" default="2">
+  Number of columns to create (generates numbered slots from 1 to n)
+</ParamField>
+
+### Implementation
+
+Dynamically creates slots based on the number prop:
+
+```vue
+<template>
+  <div class="flex flex-col">
+    <div v-for="(n, index) in number" :key="index" class="flex-1">
+      <slot :name="n"></slot>
+    </div>
+  </div>
+</template>
+```
+
+### Features
+
+- **Flexbox Layout**: Uses `flex flex-col` for vertical stacking
+- **Equal Width**: Each column gets `flex-1` for equal distribution
+- **Named Slots**: Access columns using `#1`, `#2`, etc.
+- **Dynamic**: Number of columns determined at runtime
+
+### Source Reference
+
+Location: `~/workspace/source/components/layout/Col.vue:1`
+
+## Best Practices
+
+### Section
+
+- Always provide an `id` for anchor navigation
+- Use `heading` for context, `title` for main message
+- Toggle `hasBackground` to create visual rhythm
+- Use `fullSize` sparingly (hero sections only)
+
+### Container
+
+- Use for all main content areas
+- Nest inside Section for page structure
+- Don't nest Container components
+
+### Stack
+
+- Use for vertical content grouping
+- Default spacing (4) works for most cases
+- Increase spacing for distinct sections (6-8)
+
+### Navbar
+
+- Customize navigation items in component source
+- Ensure logo path is correct
+- Test mobile menu on various screen sizes
+- Consider accessibility for menu toggle
+
+### Footer
+
+- Update social links with actual URLs
+- Ensure legal pages exist before linking
+- Match `hasBackground` with last Section
+
+### Col
+
+- Use CSS Grid for complex layouts instead
+- Best for simple 2-3 column layouts
+- Remember slots are numbered from 1, not 0
+- Columns stack vertically on all screen sizes (no responsive breakpoints)

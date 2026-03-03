@@ -1,0 +1,636 @@
+---
+title: Features
+description: Explore all the features of this Vue.js portfolio including dark mode, animations, project showcase, and more.
+---
+
+## Overview
+
+This portfolio is packed with modern features designed to create an impressive online presence. Each feature is built with performance and user experience in mind.
+
+<CardGroup cols={2}>
+  <Card title="Responsive Design" icon="mobile">
+    Works beautifully on all devices
+  </Card>
+  <Card title="Dark Mode" icon="moon">
+    Toggle between light and dark themes
+  </Card>
+  <Card title="Smooth Animations" icon="wand-magic-sparkles">
+    AOS animations and transitions
+  </Card>
+  <Card title="SEO Optimized" icon="magnifying-glass">
+    Meta tags and sitemap included
+  </Card>
+</CardGroup>
+
+## Core Features
+
+### Dark/Light Mode Toggle
+
+Seamless theme switching with persistent user preference.
+
+<Tabs>
+  <Tab title="Implementation">
+    The theme toggle is implemented using `@nuxtjs/color-mode`:
+
+    ```vue components/layout/Navbar.vue
+    <template>
+      <button
+        class="flex gap-2 rounded-xl bg-gray-100 dark:bg-gray-900"
+        @click="$colorMode.preference = $colorMode.value === 'light' ? 'dark' : 'light'"
+      >
+        <Icon
+          v-if="$colorMode.value === 'light'"
+          class="cursor-pointer rounded-lg bg-gray-100 p-1 text-gray-500"
+          name="moon"
+          :outline="false"
+        />
+        <Icon
+          v-else
+          class="cursor-pointer rounded-lg bg-yellow-50 text-yellow-500"
+          name="sunny"
+          :outline="false"
+        />
+      </button>
+    </template>
+    ```
+  </Tab>
+
+  <Tab title="Configuration">
+    ```typescript nuxt.config.ts
+    export default defineNuxtConfig({
+      modules: ['@nuxtjs/color-mode'],
+      colorMode: {
+        classSuffix: '', // Use 'dark' class instead of 'dark-mode'
+      },
+    })
+    ```
+
+    <Info>
+      The theme preference is stored in localStorage and persists across sessions.
+    </Info>
+  </Tab>
+
+  <Tab title="Styling">
+    TailwindCSS dark mode classes are used throughout:
+
+    ```vue
+    <div class="bg-white dark:bg-gray-800">
+      <h1 class="text-gray-900 dark:text-white">
+        Hello World
+      </h1>
+    </div>
+    ```
+  </Tab>
+</Tabs>
+
+### Animated Typing Effect
+
+Dynamic hero section with rotating skill names using Typed.js.
+
+```javascript pages/index.vue
+const skills = ['Full-stack', 'Laravel', 'VueJS', 'PHP', 'JS']
+const typed = ref(null)
+
+onMounted(() => {
+  const typedInstance = new Typed('.typed', {
+    strings: skills,
+    typeSpeed: 150,
+    loop: true,
+  })
+  typed.value = typedInstance
+})
+```
+
+```vue
+<template>
+  <h1>
+    Un développeur web freelance
+    <span class="typed text-blue-500 dark:text-blue-600"></span>
+  </h1>
+</template>
+```
+
+<Note>
+  The typing animation starts automatically when the page loads and loops continuously through the skill array.
+</Note>
+
+### Project Showcase
+
+Filterable project gallery with multiple categories and detailed information.
+
+<Tabs>
+  <Tab title="Projects Data">
+    ```typescript components/misc/Projects.vue
+    const projects: Project[] = [
+      {
+        image: 'x-memes',
+        title: 'X-Memes',
+        description: 'Plateforme de partage de mêmes favoris venant de Twitter.',
+        technologies: ['HTML5', 'Laravel', 'VueJS', 'TailwindCSS'],
+        github: 'x-memes',
+        url: 'https://x-memes.com',
+        category: 'website',
+      },
+      {
+        image: 'spotify-liked-tracks-sorter',
+        title: 'Spotify liked tracks sorter',
+        description: 'Utilitaire de tri automatique des musiques aimées.',
+        technologies: ['HTML5', 'VueJS', 'Bootstrap', 'Api'],
+        url: 'https://auto-sorting-spotify-liked-songs.netlify.app',
+        github: 'auto-sorting-spotify-liked-songs',
+        category: 'web-application',
+      },
+      // More projects...
+    ]
+    ```
+  </Tab>
+
+  <Tab title="Filtering Logic">
+    ```typescript
+    const categories: Category[] = [
+      { label: 'Tout', value: 'all' },
+      { label: 'Sites web', value: 'website' },
+      { label: 'Applications web', value: 'web-application' },
+      { label: 'Ressources', value: 'resources' },
+    ]
+
+    const selectedCategory = ref('all')
+    const filteredProjects = ref(projects)
+
+    const selectCategory = (category: string) => {
+      selectedCategory.value = category
+      filteredProjects.value = projects
+
+      if (!category || category !== 'all') {
+        filteredProjects.value = projects.filter(
+          (project) => project.category === category
+        )
+      }
+    }
+    ```
+  </Tab>
+
+  <Tab title="Display">
+    ```vue
+    <template>
+      <!-- Filter Buttons -->
+      <Button
+        v-for="category in categories"
+        :type="selectedCategory === category.value ? 'primary' : 'secondary'"
+        @click="selectCategory(category.value)"
+      >
+        {{ category.label }}
+        ({{ category.value === 'all' ? projects.length : countProjectsByCategory(category.value) }})
+      </Button>
+
+      <!-- Project Cards -->
+      <div v-for="project in filteredProjects">
+        <NuxtImg :src="`images/projects/${project.image}.webp`" />
+        <h3>{{ project.title }}</h3>
+        <p>{{ project.description }}</p>
+        <Badge v-for="tech in project.technologies">{{ tech }}</Badge>
+      </div>
+    </template>
+    ```
+  </Tab>
+</Tabs>
+
+### Contact Form with Netlify
+
+Fully functional contact form with spam protection.
+
+```vue pages/index.vue
+<form
+  name="contact"
+  method="POST"
+  action="/contact-submission"
+  data-netlify-recaptcha="true"
+  netlify-honeypot="bot-field"
+  data-netlify="true"
+>
+  <input type="hidden" name="form-name" value="contact" />
+  
+  <!-- Honeypot for bot protection -->
+  <p class="hidden">
+    <label>
+      Don't fill this out if you're human:
+      <input name="bot-field" />
+    </label>
+  </p>
+
+  <Input
+    id="first_name"
+    label="Nom"
+    placeholder="Nom"
+    required
+  />
+  <Input
+    id="last_name"
+    label="Prénom"
+    placeholder="Prénom"
+    required
+  />
+  <Input
+    type="email"
+    id="email"
+    placeholder="Adresse e-mail"
+    label="Adresse e-mail"
+    required
+  />
+  <Textarea
+    id="message"
+    label="Message"
+    placeholder="Soyez le plus explicite possible"
+    required
+  />
+
+  <!-- reCAPTCHA -->
+  <div data-netlify-recaptcha="true"></div>
+
+  <Button type="primary">Envoyer</Button>
+</form>
+```
+
+<Warning>
+  Remember to enable Netlify Forms in your Netlify dashboard and configure reCAPTCHA for spam protection.
+</Warning>
+
+### Experience Timeline
+
+Professional experience displayed in an elegant timeline format.
+
+```vue pages/index.vue
+<div class="space-y-8">
+  <ExperienceCard
+    image="guillaume-cazin.webp"
+    job="Développeur web freelance"
+    company="Guillaume Cazin"
+    period="Freelance (Mars. 2024 - Aujourd'hui)"
+    :technologies="['HTML5', 'CSS3', 'VueJS', 'PHP', 'Laravel', 'jQuery', 'API']"
+  />
+  <ExperienceCard
+    image="diatem.webp"
+    job="Développeur web"
+    company="Diatem"
+    period="CDI de 2 ans (Nov. 2020 - Nov. 2022)"
+    description="Utilisation de VueJS pour créer des interfaces..."
+    :technologies="['HTML5', 'CSS3', 'VueJS', 'PHP', 'Drupal 8', 'Wordpress', 'Laravel']"
+    right
+  />
+</div>
+```
+
+The timeline features:
+- Alternating left/right layout
+- Company logos
+- Technology badges
+- Detailed descriptions
+- Visual timeline connector
+
+### Skills Section
+
+Organized skill cards grouped by category.
+
+```vue pages/index.vue
+<div class="grid gap-5 lg:grid-cols-3">
+  <SkillCard
+    icon="code-slash"
+    color="blue"
+    title="Développement"
+    :skills="[
+      'HTML',
+      'CSS',
+      'Boostrap',
+      'Tailwind',
+      'PHP',
+      'Laravel',
+      'Twig',
+      'Vanilla JS',
+      'VueJS',
+      'jQuery',
+    ]"
+  />
+  <SkillCard
+    icon="cog"
+    color="purple"
+    title="Outils"
+    :skills="['Figma', 'PhpStorm', 'Code']"
+  />
+  <SkillCard
+    icon="cog"
+    color="yellow"
+    title="Workflow"
+    :skills="[
+      'Workstation Linux',
+      'Méthodes agile (Scrum, Kanban)',
+      'Versionning Git',
+      'Télétravail',
+    ]"
+  />
+</div>
+```
+
+### Resume/CV Page
+
+Dedicated CV page with downloadable PDF version.
+
+<Tabs>
+  <Tab title="Data Structure">
+    ```typescript pages/cv.vue
+    const infos: Information = {
+      name: 'Guillaume Cazin',
+      age: new Date().getFullYear() - 1999,
+      role: 'Développeur web',
+      mail: 'contact@guillaume-cazin.fr',
+      phone: '06 10 85 42 18',
+      socials: [
+        {
+          label: 'guillaume-cazin.fr',
+          url: 'https://www.guillaume-cazin.fr/',
+          icon: 'link-outline',
+        },
+        {
+          label: 'guillaume-cazin',
+          url: 'https://www.linkedin.com/in/guillaume-cazin/',
+          icon: 'logo-linkedin',
+        },
+        // More social links...
+      ],
+    }
+
+    const skills: Skill[] = [
+      { title: 'HTML5 & CSS3', rating: 'Maîtrise' },
+      { title: 'VueJS 3', rating: 'Maîtrise' },
+      { title: 'Laravel 10', rating: 'Maîtrise' },
+      // More skills...
+    ]
+    ```
+  </Tab>
+
+  <Tab title="Features">
+    - **Printable layout**: Desktop view optimized for printing
+    - **Mobile fallback**: Image version for mobile devices
+    - **PDF download**: Direct download button
+    - **Sections**: Contact, About, Skills, Languages, Hobbies, Experience, Education
+
+    ```vue
+    <a href="/images/misc/cv-guillaume-cazin.pdf" download>
+      <Button>Version PDF</Button>
+    </a>
+
+    <!-- Desktop version -->
+    <div id="cv" class="hidden lg:flex">
+      <!-- Structured CV content -->
+    </div>
+
+    <!-- Mobile version -->
+    <div class="block lg:hidden">
+      <NuxtImg src="/images/misc/cv.webp" alt="CV" />
+    </div>
+    ```
+  </Tab>
+</Tabs>
+
+## Component System
+
+### Reusable Components
+
+The portfolio uses a comprehensive component library:
+
+<AccordionGroup>
+  <Accordion title="Layout Components">
+    - **Navbar**: Responsive navigation with mobile menu
+    - **Footer**: Site footer with links
+    - **Section**: Page section wrapper with optional backgrounds
+    - **Container**: Responsive container
+    - **Stack**: Vertical spacing utility
+    - **Col**: Column layout
+  </Accordion>
+
+  <Accordion title="Card Components">
+    - **Card**: Generic card with title and description
+    - **SkillCard**: Skill category card with icon
+    - **ExperienceCard**: Experience timeline card
+  </Accordion>
+
+  <Accordion title="Element Components">
+    - **Button**: Styled button with variants (primary, secondary, ghost, transparent)
+    - **Icon**: Ionicon wrapper
+    - **Text**: Typography component
+    - **Link**: Styled link component
+    - **Badge**: Technology badge
+  </Accordion>
+
+  <Accordion title="Form Components">
+    - **Input**: Styled input field
+    - **Textarea**: Styled textarea
+  </Accordion>
+
+  <Accordion title="Misc Components">
+    - **Projects**: Project showcase with filtering
+    - **References**: Company references gallery
+    - **Animate**: AOS animation wrapper
+    - **BlobBackground**: Animated background shapes
+  </Accordion>
+</AccordionGroup>
+
+### Animation System
+
+The portfolio uses `nuxt-aos` for scroll animations:
+
+```vue components/misc/Animate.vue
+<template>
+  <div
+    :data-aos="getAnimation"
+    :data-aos-duration="duration"
+    :data-aos-delay="delay"
+  >
+    <slot />
+  </div>
+</template>
+```
+
+Usage example:
+
+```vue
+<Animate type="zoom" to="in">
+  <p>This will zoom in when scrolled into view</p>
+</Animate>
+
+<Animate to="right">
+  <Card title="Slides from right" />
+</Animate>
+
+<Animate to="left">
+  <Card title="Slides from left" />
+</Animate>
+```
+
+## Performance Features
+
+<CardGroup cols={2}>
+  <Card title="Image Optimization" icon="image">
+    `@nuxt/image` automatically optimizes and lazy-loads images
+  </Card>
+  <Card title="Code Splitting" icon="scissors">
+    Automatic code splitting by Nuxt 3
+  </Card>
+  <Card title="Tree Shaking" icon="tree">
+    Unused code eliminated in production builds
+  </Card>
+  <Card title="Minification" icon="compress">
+    CSS and JavaScript minified for production
+  </Card>
+</CardGroup>
+
+### Image Optimization
+
+```vue
+<!-- Automatically optimized and lazy-loaded -->
+<NuxtImg
+  src="/images/misc/avatar.webp"
+  class="w-52 rounded-br-3xl rounded-tl-3xl lg:w-80"
+  alt="Avatar"
+/>
+```
+
+<Info>
+  NuxtImg automatically generates responsive images and uses modern formats like WebP.
+</Info>
+
+## SEO Features
+
+### Meta Tags
+
+```vue app.vue
+<Head>
+  <Meta
+    name="description"
+    content="Développeur web freelance full stack spécialisé en Laravel et VueJS."
+  />
+</Head>
+```
+
+### Page-Specific Meta
+
+```typescript pages/index.vue
+useHead({
+  title: 'Portfolio - Guillaume Cazin - Développeur web freelance',
+})
+```
+
+### Sitemap
+
+Automatic sitemap generation via `@nuxtjs/sitemap`:
+
+```typescript nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@nuxtjs/sitemap'],
+  site: {
+    url: 'https://www.guillaume-cazin.fr',
+    name: 'Guillaume Cazin',
+    trailingSlash: true,
+  },
+})
+```
+
+### Robots.txt
+
+```typescript nuxt.config.ts
+routeRules: {
+  '/contact-submission': {
+    robots: false, // Don't index form submission page
+  },
+}
+```
+
+## Accessibility Features
+
+- Semantic HTML structure
+- ARIA labels on navigation
+- Keyboard navigation support
+- Focus states on interactive elements
+- Alt text on all images
+- Proper heading hierarchy
+
+```vue components/layout/Navbar.vue
+<nav role="navigation" aria-label="navigation">
+  <!-- Navigation content -->
+</nav>
+```
+
+## Scroll to Top
+
+Automatic scroll-to-top button that appears after scrolling:
+
+```vue pages/index.vue
+<script setup>
+const scrollTop = ref(0)
+const scrollTopPositionButtonAppear = 250
+
+const getScrollTop = () => {
+  scrollTop.value = document.documentElement.scrollTop
+}
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0 })
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', getScrollTop)
+})
+</script>
+
+<template>
+  <div v-if="scrollTop > scrollTopPositionButtonAppear">
+    <Button @click="scrollToTop">
+      <Icon name="chevron-up" />
+    </Button>
+  </div>
+</template>
+```
+
+## Background Patterns
+
+Hero Patterns integration for beautiful backgrounds:
+
+```vue pages/index.vue
+<style scoped>
+.avatar-background {
+  @apply bg-gray-100 dark:bg-gray-900;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'...");
+}
+</style>
+```
+
+<Note>
+  Background patterns from [Hero Patterns](https://heropatterns.com/) are embedded as data URIs for optimal performance.
+</Note>
+
+## Summary
+
+This portfolio includes:
+
+<Steps>
+  <Step title="Visual Features">
+    Dark mode, animations, responsive design, beautiful backgrounds
+  </Step>
+  <Step title="Interactive Features">
+    Project filtering, contact form, scroll-to-top, mobile menu
+  </Step>
+  <Step title="Content Features">
+    Experience timeline, skills showcase, project gallery, downloadable CV
+  </Step>
+  <Step title="Technical Features">
+    SEO optimization, image optimization, code splitting, accessibility
+  </Step>
+</Steps>
+
+<CardGroup cols={2}>
+  <Card title="Back to Introduction" icon="arrow-left" href="/introduction">
+    Learn about the portfolio overview
+  </Card>
+  <Card title="Quick Start Guide" icon="rocket" href="/quickstart">
+    Get started with installation and setup
+  </Card>
+</CardGroup>

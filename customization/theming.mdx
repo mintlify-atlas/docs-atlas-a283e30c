@@ -1,0 +1,195 @@
+---
+title: 'Theming'
+description: 'Customize the TailwindCSS theme, colors, and visual styling of your portfolio'
+---
+
+This portfolio uses TailwindCSS for styling. You can customize the theme by modifying the Tailwind configuration and applying custom styles.
+
+## Tailwind Configuration
+
+The main Tailwind configuration is located at `tailwind.config.js`:
+
+```javascript
+/** @type {import('tailwindcss').Config} */
+export default {
+    darkMode: 'class',
+    content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+    theme: {
+        extend: {},
+    },
+    plugins: [],
+    safelist: [
+        {
+            pattern: /space-./,
+        },
+    ],
+}
+```
+
+## Customizing Colors
+
+The portfolio primarily uses blue as the accent color. You can customize this by extending the theme in `tailwind.config.js`:
+
+```javascript
+theme: {
+    extend: {
+        colors: {
+            primary: {
+                50: '#eff6ff',
+                100: '#dbeafe',
+                200: '#bfdbfe',
+                300: '#93c5fd',
+                400: '#60a5fa',
+                500: '#3b82f6',
+                600: '#2563eb',
+                700: '#1d4ed8',
+                800: '#1e40af',
+                900: '#1e3a8a',
+            },
+        },
+    },
+},
+```
+
+Then update your components to use `primary` instead of `blue`:
+
+```vue
+<!-- Before -->
+<span class="text-blue-500 dark:text-blue-700">Guillaume</span>
+
+<!-- After -->
+<span class="text-primary-500 dark:text-primary-700">Guillaume</span>
+```
+
+## Current Color Usage
+
+The portfolio uses the following color scheme throughout:
+
+### Accent Colors
+- **Light mode**: `blue-500` (#3b82f6)
+- **Dark mode**: `blue-600` / `blue-700` (#2563eb / #1d4ed8)
+
+### Background Colors
+- **Light mode**: `white`, `gray-100`
+- **Dark mode**: `gray-800`, `gray-900`
+
+### Examples from the codebase
+
+From `pages/index.vue:90-91`:
+```vue
+<span class="text-7xl font-extrabold tracking-tight text-blue-500 dark:text-blue-700 lg:text-8xl">
+    Guillaume
+</span>
+```
+
+From `components/layout/Navbar.vue:74`:
+```vue
+<NuxtLink
+    :to="item.url"
+    class="navbar-link px-2 font-bold uppercase text-gray-800 transition-colors hover:text-blue-500 dark:text-gray-200 dark:hover:text-blue-600"
+>
+    {{ item.text }}
+</NuxtLink>
+```
+
+## Custom Fonts
+
+The portfolio uses the Lato font from Google Fonts. You can change this in `assets/css/main.css`:
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+body {
+    font-family: 'Lato', sans-serif;
+}
+```
+
+To use a different font, replace the import URL and update the font-family:
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+```
+
+## Extending Tailwind Theme
+
+You can add custom spacing, typography, or other design tokens:
+
+```javascript
+theme: {
+    extend: {
+        spacing: {
+            '128': '32rem',
+            '144': '36rem',
+        },
+        borderRadius: {
+            '4xl': '2rem',
+        },
+        fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Poppins', 'sans-serif'],
+        },
+    },
+},
+```
+
+## Adding Tailwind Plugins
+
+You can enhance Tailwind with plugins. For example, to add forms and typography:
+
+```javascript
+import forms from '@tailwindcss/forms'
+import typography from '@tailwindcss/typography'
+
+export default {
+    // ... other config
+    plugins: [forms, typography],
+}
+```
+
+Don't forget to install the plugins:
+
+```bash
+npm install @tailwindcss/forms @tailwindcss/typography
+```
+
+## Background Patterns
+
+The avatar section uses a custom SVG background pattern (see `pages/index.vue:575-578`):
+
+```css
+.avatar-background {
+    @apply bg-gray-100 dark:bg-gray-900;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'...");
+}
+```
+
+You can generate custom patterns at [Hero Patterns](https://heropatterns.com/) or [SVG Backgrounds](https://www.svgbackgrounds.com/).
+
+## Safelist Configuration
+
+The config includes a safelist for spacing utilities:
+
+```javascript
+safelist: [
+    {
+        pattern: /space-./,
+    },
+]
+```
+
+This ensures dynamic spacing classes aren't purged during production builds. Add more patterns as needed:
+
+```javascript
+safelist: [
+    {
+        pattern: /space-./,
+    },
+    {
+        pattern: /bg-(red|blue|green)-(500|600|700)/,
+    },
+]
+```

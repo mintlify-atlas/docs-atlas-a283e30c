@@ -1,0 +1,368 @@
+---
+title: 'Content Customization'
+description: 'Learn how to customize personal information, projects, skills, and experience in your portfolio'
+---
+
+This guide shows you how to customize all the content in your portfolio, including personal information, projects, skills, and work experience.
+
+## Personal Information
+
+Your personal information appears in several places throughout the portfolio. Here's where to update it:
+
+### Hero Section
+
+Edit the hero section in `pages/index.vue:82-104`:
+
+```vue
+<h1 class="flex flex-1 flex-col gap-6">
+    <Text
+        selector="span"
+        type="subtitle"
+        class="font-bold uppercase"
+    >👋, je suis</Text>
+    <span class="text-7xl font-extrabold tracking-tight text-blue-500 dark:text-blue-700 lg:text-8xl">
+        Guillaume  <!-- Change your name here -->
+    </span>
+    <Text
+        selector="span"
+        type="subtitle"
+        class="font-bold uppercase"
+    >
+        Un développeur web freelance
+        <span class="typed text-blue-500 dark:text-blue-600">{{ typed }}</span>
+    </Text>
+</h1>
+```
+
+### Typed Skills Animation
+
+Customize the rotating skills in `pages/index.vue:30`:
+
+```javascript
+const skills = ['Full-stack', 'Laravel', 'VueJS', 'PHP', 'JS']
+```
+
+Add or remove skills from this array:
+
+```javascript
+const skills = ['React', 'Node.js', 'TypeScript', 'Python', 'AWS']
+```
+
+### Page Title and Meta
+
+Update the page title and metadata in `pages/index.vue:18-19` and `pages/index.vue:68-70`:
+
+```javascript
+onMounted(() => {
+    document.title = 'Your Name - Your Title'
+    // ...
+})
+
+useHead({
+    title: 'Portfolio - Your Name - Your Title',
+})
+```
+
+Also update the meta description in `app.vue:3-6`:
+
+```vue
+<Meta
+    name="description"
+    content="Your custom description here. This appears in search results."
+/>
+```
+
+### Contact Information
+
+Update your contact details in `pages/index.vue:175-207`:
+
+```vue
+<Text>
+    <Icon :outline="false" name="home" class="mr-2 text-blue-500" />
+    Your City  <!-- Line 182 -->
+</Text>
+<Text>
+    <Icon :outline="false" name="mail" class="mr-2 font-bold text-blue-500" />
+    your.email[at]example[dot]com  <!-- Line 190 -->
+</Text>
+<Text>
+    <Icon :outline="false" name="speedometer" class="mr-2 font-bold text-blue-500" />
+    Your experience level  <!-- Line 198 -->
+</Text>
+```
+
+Update the contact section footer in `pages/index.vue:510-557`:
+
+```vue
+<NuxtLink
+    to="mailto:your.email@example.com"
+    class="block text-lg font-bold !text-blue-500 underline underline-offset-4 dark:!text-blue-700"
+>
+    your.email@example.com
+</NuxtLink>
+
+<NuxtLink
+    to="tel:+1234567890"
+    class="block text-lg font-bold !text-blue-500 underline underline-offset-4 dark:!text-blue-700"
+>
+    +1 (234) 567-890
+</NuxtLink>
+```
+
+## Introduction Section
+
+Customize your bio in `pages/index.vue:145-165`:
+
+```vue
+<Animate type="zoom" to="in" class="space-y-2">
+    <Text>
+        Your first paragraph about yourself...
+    </Text>
+    <Text>
+        Your second paragraph...
+    </Text>
+    <Text>
+        Your third paragraph...
+    </Text>
+</Animate>
+```
+
+## Projects
+
+Projects are defined in `components/misc/Projects.vue:31-114`. Add or modify projects in the array:
+
+```typescript
+const projects: Project[] = [
+    {
+        image: 'project-image',  // Image filename in /public/images/projects/
+        title: 'Project Title',
+        description: 'Project description',
+        technologies: ['Vue.js', 'Node.js', 'MongoDB'],
+        github: 'username/repo',  // Optional: GitHub repo
+        url: 'https://project-url.com',  // Optional: Live URL
+        category: 'website',  // 'website', 'web-application', or 'resources'
+    },
+    // Add more projects...
+]
+```
+
+### Project Categories
+
+Available categories are defined in `components/misc/Projects.vue:116-133`:
+
+```typescript
+const categories: Category[] = [
+    {
+        label: 'Tout',
+        value: 'all',
+    },
+    {
+        label: 'Sites web',
+        value: 'website',
+    },
+    {
+        label: 'Applications web',
+        value: 'web-application',
+    },
+    {
+        label: 'Ressources',
+        value: 'resources',
+    },
+]
+```
+
+### Adding Project Images
+
+Place project images in `/public/images/projects/` directory:
+
+```bash
+public/
+  images/
+    projects/
+      my-project.webp
+      another-project.webp
+```
+
+Reference them in the projects array:
+
+```typescript
+{
+    image: 'my-project',  // Don't include .webp extension
+    // ...
+}
+```
+
+## Skills
+
+Update your skills in `pages/index.vue:349-390`:
+
+```vue
+<SkillCard
+    icon="code-slash"
+    color="blue"
+    title="Développement"
+    :skills="[
+        'HTML',
+        'CSS',
+        'JavaScript',
+        'TypeScript',
+        'React',
+        'Node.js',
+    ]"
+/>
+<SkillCard
+    icon="cog"
+    color="purple"
+    title="Outils"
+    :skills="['VS Code', 'Git', 'Docker']"
+/>
+<SkillCard
+    icon="cog"
+    color="yellow"
+    title="Workflow"
+    :skills="[
+        'Agile/Scrum',
+        'CI/CD',
+        'Git Flow',
+    ]"
+    last
+/>
+```
+
+### Available Skill Card Colors
+
+- `blue` - Blue accent
+- `purple` - Purple accent
+- `yellow` - Yellow accent
+
+You can add more colors by creating custom variants.
+
+## Work Experience
+
+Add or edit work experience in `pages/index.vue:263-335`:
+
+```vue
+<ExperienceCard
+    image="company-logo.webp"  <!-- Logo in /public/images/ -->
+    job="Your Job Title"
+    company="Company Name"
+    period="Start Date - End Date"
+    description="Description of your role and achievements"
+    :technologies="[
+        'Technology 1',
+        'Technology 2',
+        'Technology 3',
+    ]"
+    right  <!-- Optional: alternates position -->
+/>
+```
+
+### Experience Timeline
+
+Experiences are displayed in chronological order with alternating left/right positions. Use the `right` prop to alternate:
+
+```vue
+<ExperienceCard ... />  <!-- Left side -->
+<ExperienceCard ... right />  <!-- Right side -->
+<ExperienceCard ... />  <!-- Left side -->
+```
+
+## Statistics Cards
+
+Update the statistics in `pages/index.vue:213-229`:
+
+```vue
+<Card
+    :title="`+${actualYear - 2011}`"
+    description="ans de passions"
+/>
+<Card
+    :title="`+${actualYear - 2021}`"
+    description="ans d'expérience"
+/>
+<Card
+    title="+47"
+    description="projets sur GitHub"
+/>
+<Card
+    title="+1060"
+    description="commits sur GitHub"
+/>
+```
+
+The first two cards automatically calculate years based on the current year. The `actualYear` variable is defined in `pages/index.vue:28`:
+
+```javascript
+const actualYear = useState('actualYear', () => new Date().getFullYear())
+```
+
+## Navigation Menu
+
+Customize navigation items in `components/layout/Navbar.vue:7-28`:
+
+```javascript
+const items = [
+    {
+        url: '#introduction',
+        text: 'About',
+    },
+    {
+        url: '#experiences',
+        text: 'Experience',
+    },
+    {
+        url: '#competences',
+        text: 'Skills',
+    },
+    {
+        url: '#projets',
+        text: 'Projects',
+    },
+    {
+        url: '#contact',
+        text: 'Contact',
+    },
+]
+```
+
+## Site Configuration
+
+Update site-wide configuration in `nuxt.config.ts:57-61`:
+
+```typescript
+site: {
+    url: 'https://your-domain.com',
+    name: 'Your Name',
+    trailingSlash: true,
+},
+```
+
+And update the HTML language attribute in `nuxt.config.ts:6`:
+
+```typescript
+htmlAttrs: {
+    lang: 'en',  // or 'fr', 'es', etc.
+},
+```
+
+## Avatar Image
+
+Replace the avatar image in `pages/index.vue:119`:
+
+```vue
+<NuxtImg
+    src="/images/misc/avatar.webp"
+    class="avatar-background m-auto w-52 rounded-br-3xl rounded-tl-3xl lg:w-80"
+    alt="Avatar"
+/>
+```
+
+Place your avatar image at `/public/images/misc/avatar.webp`.
+
+## Tips for Content Updates
+
+1. **Images**: Always use optimized WebP format for best performance
+2. **Icons**: The portfolio uses Ionicons - browse available icons at [Ionic Icons](https://ionic.io/ionicons)
+3. **Sections**: Each major section has an `id` attribute for anchor navigation (e.g., `#introduction`, `#projects`)
+4. **Responsive**: Test content on mobile and desktop to ensure proper display
+5. **Translations**: If changing language, update all text throughout the application consistently

@@ -1,0 +1,183 @@
+---
+title: Building for Production
+description: Learn how to build your Vue.js portfolio website for production deployment
+---
+
+This guide covers how to build your Nuxt 3 portfolio application for production deployment.
+
+## Prerequisites
+
+Before building for production, ensure you have:
+
+- Node.js installed (version 16.x or higher)
+- All dependencies installed via `npm install`
+- Your environment properly configured
+
+## Build Scripts
+
+The project includes several build-related scripts defined in `package.json`:
+
+```json
+{
+  "scripts": {
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  }
+}
+```
+
+## Production Build
+
+<Steps>
+  <Step title="Install Dependencies">
+    First, ensure all dependencies are installed:
+
+    ```bash
+    npm install
+    ```
+
+    This will also run the `postinstall` script which executes `nuxt prepare` to set up your development environment.
+  </Step>
+
+  <Step title="Build the Application">
+    Run the build command to create an optimized production build:
+
+    ```bash
+    npm run build
+    ```
+
+    This command:
+    - Compiles your Vue components
+    - Optimizes and minifies JavaScript and CSS
+    - Generates the `.output` directory with your production-ready application
+    - Processes Tailwind CSS styles
+    - Optimizes images with Nuxt Image
+  </Step>
+
+  <Step title="Preview the Build (Optional)">
+    Before deploying, you can preview the production build locally:
+
+    ```bash
+    npm run preview
+    ```
+
+    This starts a local server to test your production build.
+  </Step>
+</Steps>
+
+## Static Site Generation (SSG)
+
+For static hosting platforms like Netlify, you can generate a fully static version of your site:
+
+```bash
+npm run generate
+```
+
+This command:
+- Pre-renders all routes at build time
+- Creates a `.output/public` directory with static HTML files
+- Optimizes assets for static hosting
+- Generates the sitemap automatically
+
+## Build Configuration
+
+The build process is configured in `nuxt.config.ts`. Key configurations include:
+
+### Site Configuration
+
+```typescript
+site: {
+  url: 'https://www.guillaume-cazin.fr',
+  name: 'Guillaume Cazin',
+  trailingSlash: true,
+}
+```
+
+### Modules
+
+The following modules are processed during build:
+
+- **@nuxtjs/tailwindcss**: Processes and optimizes Tailwind CSS
+- **nuxt-aos**: Adds animation on scroll functionality
+- **@nuxt/image**: Optimizes images automatically
+- **@nuxtjs/sitemap**: Generates sitemap.xml
+- **@nuxtjs/color-mode**: Enables dark/light mode
+
+### Route Rules
+
+```typescript
+routeRules: {
+  '/contact-submission': {
+    robots: false,
+  },
+}
+```
+
+This configuration prevents search engines from indexing the contact submission page.
+
+## Output Structure
+
+After building, your `.output` directory will contain:
+
+```
+.output/
+├── public/          # Static assets (when using generate)
+├── server/          # Server-side code (when using build)
+└── nitro.json       # Build metadata
+```
+
+## Build Optimization Tips
+
+<CardGroup cols={2}>
+  <Card title="Image Optimization" icon="image">
+    Nuxt Image automatically optimizes images during build. Use the `<NuxtImg>` component for automatic optimization.
+  </Card>
+
+  <Card title="Code Splitting" icon="code">
+    Nuxt automatically splits your code into chunks for optimal loading performance.
+  </Card>
+
+  <Card title="CSS Purging" icon="paintbrush">
+    Tailwind CSS purges unused styles in production, reducing CSS bundle size.
+  </Card>
+
+  <Card title="Tree Shaking" icon="tree">
+    Unused JavaScript code is automatically removed during the build process.
+  </Card>
+</CardGroup>
+
+## Troubleshooting
+
+### Build Fails
+
+If the build fails, try:
+
+1. Clear the `.nuxt` and `.output` directories:
+   ```bash
+   rm -rf .nuxt .output
+   ```
+
+2. Reinstall dependencies:
+   ```bash
+   rm -rf node_modules package-lock.json
+   npm install
+   ```
+
+3. Run the build again:
+   ```bash
+   npm run build
+   ```
+
+### Memory Issues
+
+For large builds, you may need to increase Node.js memory:
+
+```bash
+NODE_OPTIONS="--max-old-space-size=4096" npm run build
+```
+
+## Next Steps
+
+After building your application, you're ready to deploy it. Check out the [Netlify deployment guide](/deployment/netlify) to learn how to deploy your built application.

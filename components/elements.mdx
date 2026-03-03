@@ -1,0 +1,374 @@
+---
+title: 'Element Components'
+description: 'Documentation for Button, Text, Icon, Badge, and Link components'
+---
+
+# Element Components
+
+Basic UI elements that serve as the foundation for the component library.
+
+## Button
+
+A versatile button component with multiple style variants and size options.
+
+### Usage
+
+```vue
+<script setup>
+import Button from '~/components/elements/Button.vue'
+</script>
+
+<template>
+  <!-- Primary button -->
+  <Button type="primary" size="normal">
+    Submit
+  </Button>
+
+  <!-- Button with icon -->
+  <Button type="secondary" icon="download">
+    Download
+  </Button>
+
+  <!-- Link button -->
+  <Button type="primary" to="https://example.com">
+    Visit Site
+  </Button>
+
+  <!-- Disabled button -->
+  <Button type="primary" :disabled="true">
+    Disabled
+  </Button>
+</template>
+```
+
+### Props
+
+<ParamField path="type" type="string" default="primary">
+  Button style variant. Options:
+  - `primary` - Blue background with white text
+  - `secondary` - Light blue background with blue text
+  - `ghost` - Transparent with border and blue text
+  - `transparent` - No background, inherits text color
+</ParamField>
+
+<ParamField path="size" type="string" default="normal">
+  Button size. Options:
+  - `sm` - Small (px-4 py-1 text-sm)
+  - `normal` - Default (px-4 py-2.5)
+  - `lg` - Large (px-4 py-3 text-lg)
+  - `full` - Full width (px-7 py-3 w-full)
+</ParamField>
+
+<ParamField path="icon" type="string">
+  Ionicon name to display inside the button (without `-outline` suffix)
+</ParamField>
+
+<ParamField path="to" type="string">
+  URL for link button. When provided, renders as `<a>` instead of `<button>`
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables the button and applies disabled styling
+</ParamField>
+
+### Style Variants
+
+The component uses computed classes for each type:
+
+```javascript
+const buttonColor = () => {
+  return {
+    primary: 'bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-800',
+    secondary: 'bg-blue-100 dark:bg-blue-800/50 text-blue-600 dark:text-blue-400 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-800',
+    ghost: 'border border-transparent text-blue-600 hover:bg-blue-100 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400',
+    transparent: 'bg-transparent text-black dark:text-white',
+  }[props.type]
+}
+```
+
+### Source Reference
+
+Location: `~/workspace/source/components/elements/Button.vue:1`
+
+---
+
+## Text
+
+A semantic typography component that renders different HTML elements based on the content type.
+
+### Usage
+
+```vue
+<script setup>
+import Text from '~/components/elements/Text.vue'
+</script>
+
+<template>
+  <Text type="heading">ABOUT ME</Text>
+  <Text type="title">Welcome to My Portfolio</Text>
+  <Text type="subtitle">Full Stack Developer</Text>
+  <Text type="text">This is a paragraph of body text.</Text>
+  <Text type="sub">Additional information</Text>
+  <Text type="xs">Small print text</Text>
+
+  <!-- Custom selector override -->
+  <Text type="title" selector="h1">
+    Custom H1 with title styling
+  </Text>
+</template>
+```
+
+### Props
+
+<ParamField path="type" type="string" default="text">
+  Typography variant. Options:
+  - `heading` - Uppercase blue heading (renders as `p`)
+  - `title` - Large heading (renders as `h2`)
+  - `subtitle` - Medium heading (renders as `h3`)
+  - `text` - Body text (renders as `p`)
+  - `sub` - Small supporting text (renders as `span`)
+  - `xs` - Extra small text (renders as `span`)
+</ParamField>
+
+<ParamField path="selector" type="string">
+  Override the default HTML element. When provided, uses this instead of the type's default tag.
+</ParamField>
+
+### Type Mappings
+
+The component automatically selects the appropriate HTML element:
+
+```javascript
+const tagType = computed(() => {
+  return {
+    link: 'a',
+    text: 'p',
+    heading: 'p',
+    title: 'h2',
+    subtitle: 'h3',
+    sub: 'span',
+    xs: 'span',
+  }[props.type]
+})
+```
+
+### Styling Classes
+
+- **heading**: `font-bold uppercase text-blue-500`
+- **title**: `text-3xl font-bold leading-tight dark:text-white lg:text-4xl`
+- **subtitle**: `text-xl leading-tight text-gray-700 dark:text-gray-300 lg:text-2xl`
+- **text**: `text-base leading-loose text-gray-800 dark:text-gray-200 lg:text-lg`
+- **sub**: `text-sm text-gray-600 dark:text-gray-400 lg:text-base`
+- **xs**: `text-xs text-gray-600 dark:text-gray-400 lg:text-sm`
+
+### Source Reference
+
+Location: `~/workspace/source/components/elements/Text.vue:1`
+
+---
+
+## Icon
+
+A wrapper component for Ionicons with size control.
+
+### Usage
+
+```vue
+<script setup>
+import Icon from '~/components/elements/Icon.vue'
+</script>
+
+<template>
+  <!-- Outlined icon (default) -->
+  <Icon name="heart" size="md" />
+
+  <!-- Filled icon -->
+  <Icon name="logo-github" :outline="false" size="xl" />
+
+  <!-- Large icon -->
+  <Icon name="download" size="5xl" />
+</template>
+```
+
+### Props
+
+<ParamField path="name" type="string" required>
+  Ionicon name (e.g., "heart", "logo-github", "menu")
+</ParamField>
+
+<ParamField path="outline" type="boolean" default="true">
+  If `true`, appends `-outline` to the icon name for outlined style
+</ParamField>
+
+<ParamField path="size" type="string" default="md">
+  Icon size. Options:
+  - `sm` - text-xs lg:text-sm
+  - `md` - text-sm lg:text-md
+  - `lg` - text-base lg:text-lg
+  - `xl` - text-lg lg:text-xl
+  - `2xl` - text-xl lg:text-2xl
+  - `3xl` - text-2xl lg:text-3xl
+  - `4xl` - text-3xl lg:text-4xl
+  - `5xl` - text-4xl lg:text-5xl
+</ParamField>
+
+### Size Implementation
+
+```javascript
+const sizeClass = computed(() => {
+  return {
+    '5xl': 'text-4xl lg:text-5xl',
+    '4xl': 'text-3xl lg:text-4xl',
+    '3xl': 'text-2xl lg:text-3xl',
+    '2xl': 'text-xl lg:text-2xl',
+    xl: 'text-lg lg:text-xl',
+    lg: 'text-base lg:text-lg',
+    md: 'text-sm lg:text-md',
+    sm: 'text-xs lg:text-sm',
+  }[props.size]
+})
+```
+
+### Source Reference
+
+Location: `~/workspace/source/components/elements/Icon.vue:1`
+
+---
+
+## Badge
+
+A label component for displaying tags, categories, or status indicators.
+
+### Usage
+
+```vue
+<script setup>
+import Badge from '~/components/elements/Badge.vue'
+</script>
+
+<template>
+  <!-- Primary badge -->
+  <Badge size="md">Vue.js</Badge>
+
+  <!-- Secondary badge -->
+  <Badge secondary size="sm">TypeScript</Badge>
+
+  <!-- Technology tags -->
+  <div class="flex gap-2">
+    <Badge secondary size="sm">React</Badge>
+    <Badge secondary size="sm">Node.js</Badge>
+    <Badge secondary size="sm">Docker</Badge>
+  </div>
+</template>
+```
+
+### Props
+
+<ParamField path="secondary" type="boolean" default="false">
+  If `true`, uses secondary color scheme (light blue background with blue text)
+</ParamField>
+
+<ParamField path="size" type="string" default="md">
+  Badge size. Options:
+  - `sm` - !px-2 py-1 !text-sm
+  - `md` - !px-3.5 !py-2.5
+</ParamField>
+
+### Color Variants
+
+```javascript
+const properties = () => {
+  return {
+    'bg-blue-500 text-white': !props.secondary,
+    'bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500': props.secondary,
+    '!px-2 py-1 !text-sm': props.size === 'sm',
+    '!px-3.5 !py-2.5': props.size === 'md',
+  }
+}
+```
+
+### Features
+
+- **Auto-width**: Uses `w-fit` to match content width
+- **No-wrap**: `whitespace-nowrap` prevents text breaking
+- **Dark Mode**: Automatic color adaptation
+- **Font Weight**: Bold text for visibility
+
+### Source Reference
+
+Location: `~/workspace/source/components/elements/Badge.vue:1`
+
+---
+
+## Link
+
+A simple wrapper around Vue Router's `router-link` component.
+
+### Usage
+
+```vue
+<script setup>
+import Link from '~/components/elements/Link.vue'
+</script>
+
+<template>
+  <Link to="home">
+    Go to Home
+  </Link>
+</template>
+```
+
+### Props
+
+<ParamField path="to" type="string">
+  Route name for Vue Router navigation
+</ParamField>
+
+### Implementation
+
+The component passes the `to` prop as a named route:
+
+```vue
+<template>
+  <router-link :to="{ name: to }">
+    <slot></slot>
+  </router-link>
+</template>
+```
+
+### Source Reference
+
+Location: `~/workspace/source/components/elements/Link.vue:1`
+
+## Best Practices
+
+### Button
+
+- Use `primary` for main actions, `secondary` for supporting actions
+- Use `ghost` for subtle interactions
+- Include icons for clarity (e.g., download, external links)
+- Always disable buttons during async operations
+
+### Text
+
+- Use semantic types for proper document structure
+- Use `heading` for section labels
+- Use `title` for main headings, `subtitle` for subheadings
+- Override selector only when semantic HTML requires it
+
+### Icon
+
+- Use outlined icons for consistency (default)
+- Use filled icons for logos (`:outline="false"`)
+- Choose appropriate sizes for context
+
+### Badge
+
+- Use `secondary` variant for tags and technologies
+- Use `sm` size for dense lists
+- Group related badges with flex layouts
+
+### Link
+
+- Only use for internal Vue Router navigation
+- For external links, use standard `<a>` tags or Button component with `to` prop

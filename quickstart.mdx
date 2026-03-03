@@ -1,80 +1,374 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quick Start
+description: Get your Vue.js portfolio up and running in minutes with this step-by-step guide.
 ---
 
-## Get started in three steps
+## Prerequisites
 
-Get your documentation site running locally and make your first customization.
-
-### Step 1: Set up your local environment
-
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
-
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
+Before you begin, ensure you have the following installed:
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Node.js" icon="node-js">
+    Version 18.x or higher recommended
+  </Card>
+  <Card title="Package Manager" icon="box">
+    npm, yarn, or pnpm
+  </Card>
+  <Card title="Git" icon="git-alt">
+    For cloning the repository
+  </Card>
+  <Card title="Code Editor" icon="code">
+    VS Code, WebStorm, or your preferred editor
+  </Card>
 </CardGroup>
 
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+## Installation
+
+<Steps>
+  <Step title="Clone the Repository">
+    Clone the portfolio repository to your local machine:
+
+    ```bash
+    git clone https://github.com/gcazin/portfolio
+    cd portfolio
+    ```
+
+    <Note>
+      Make sure you have Git installed and configured on your system.
+    </Note>
+  </Step>
+
+  <Step title="Install Dependencies">
+    Install all required npm packages:
+
+    <CodeGroup>
+
+    ```bash npm
+    npm install
+    ```
+
+    ```bash yarn
+    yarn install
+    ```
+
+    ```bash pnpm
+    pnpm install
+    ```
+
+    </CodeGroup>
+
+    This will install:
+    - Nuxt 3 framework
+    - Vue.js and Vue Router
+    - TailwindCSS
+    - Typed.js for animations
+    - All other dependencies
+  </Step>
+
+  <Step title="Start Development Server">
+    Run the development server:
+
+    <CodeGroup>
+
+    ```bash npm
+    npm run dev
+    ```
+
+    ```bash yarn
+    yarn dev
+    ```
+
+    ```bash pnpm
+    pnpm dev
+    ```
+
+    </CodeGroup>
+
+    The application will be available at `http://localhost:3000`
+
+    <Check>
+      You should see the portfolio homepage with the hero section and navigation.
+    </Check>
+  </Step>
+
+  <Step title="Explore the Application">
+    Navigate through the different sections:
+
+    - **Home (/)** - Hero section with animated typing
+    - **Introduction (#introduction)** - About section with stats
+    - **References (#references)** - Company project showcase
+    - **Experiences (#experiences)** - Professional timeline
+    - **Skills (#competences)** - Technology cards
+    - **Projects (#projets)** - Project gallery
+    - **Contact (#contact)** - Contact form
+    - **CV (/cv)** - Resume page
+  </Step>
+</Steps>
+
+## Project Structure
+
+Understand the key directories and files:
+
+```plaintext
+portfolio/
+├── components/
+│   ├── cards/              # Card components (SkillCard, ExperienceCard)
+│   ├── elements/           # Basic elements (Button, Icon, Badge)
+│   ├── form/               # Form components (Input, Textarea)
+│   ├── layout/             # Layout components (Navbar, Footer, Section)
+│   └── misc/               # Misc components (Projects, References, Animate)
+├── pages/
+│   ├── index.vue           # Homepage with all sections
+│   ├── cv.vue              # Resume/CV page
+│   ├── contact-submission.vue  # Form submission success page
+│   ├── legal-notice.vue    # Legal notice
+│   └── privacy-policy.vue  # Privacy policy
+├── public/
+│   └── images/             # Static images (projects, skills, companies)
+├── assets/
+│   └── css/
+│       └── main.css        # Global CSS and Tailwind imports
+├── app.vue                 # Root component with Navbar and Footer
+├── nuxt.config.ts          # Nuxt configuration
+├── tailwind.config.js      # Tailwind configuration
+└── package.json            # Dependencies and scripts
+```
+
+## Configuration
+
+### Nuxt Configuration
+
+The main configuration is in `nuxt.config.ts`:
+
+```typescript nuxt.config.ts
+export default defineNuxtConfig({
+  app: {
+    head: {
+      htmlAttrs: { lang: 'fr' },
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+    },
+  },
+  colorMode: {
+    classSuffix: '',
+  },
+  css: ['~/assets/css/main.css'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    'nuxt-aos',
+    '@nuxt/image',
+    '@nuxtjs/sitemap',
+    '@nuxtjs/color-mode',
+  ],
+  site: {
+    url: 'https://www.guillaume-cazin.fr',
+    name: 'Guillaume Cazin',
+  },
+})
+```
+
+<Accordion title="Key Configuration Options">
+  - **app.head**: Meta tags, language, and external scripts (Google Analytics, Ionicons)
+  - **colorMode**: Dark mode configuration
+  - **modules**: Nuxt modules for Tailwind, AOS animations, image optimization, sitemap, and color mode
+  - **site**: SEO configuration with site URL and name
+  - **vue.compilerOptions**: Custom element configuration for Ionicons
+</Accordion>
+
+### Tailwind Configuration
+
+```javascript tailwind.config.js
+export default {
+  darkMode: 'class',
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+  safelist: [
+    {
+      pattern: /space-./,
+    },
+  ],
+}
+```
+
+## Development Workflow
+
+<Steps>
+  <Step title="Hot Module Replacement">
+    The dev server supports HMR - your changes will be reflected instantly without page refresh.
+
+    <Info>
+      Edit any `.vue` file and see the changes appear immediately in your browser.
+    </Info>
+  </Step>
+
+  <Step title="Dark Mode Testing">
+    Click the moon/sun icon in the navbar to toggle between light and dark modes.
+
+    The theme is managed by `@nuxtjs/color-mode` and persists in localStorage.
+  </Step>
+
+  <Step title="Component Development">
+    Components are organized by type:
+
+    - Modify `components/layout/Navbar.vue` to change navigation items
+    - Edit `components/cards/SkillCard.vue` to customize skill displays
+    - Update `components/misc/Projects.vue` to add/edit projects
+  </Step>
+</Steps>
+
+## Building for Production
+
+When you're ready to deploy:
+
+<CodeGroup>
+
+```bash npm
+npm run build
+```
+
+```bash yarn
+yarn build
+```
+
+```bash pnpm
+pnpm build
+```
+
+</CodeGroup>
+
+This creates an optimized production build in the `.output` directory.
+
+### Preview Production Build
+
+Test the production build locally:
+
+<CodeGroup>
+
+```bash npm
+npm run preview
+```
+
+```bash yarn
+yarn preview
+```
+
+```bash pnpm
+pnpm preview
+```
+
+</CodeGroup>
+
+## Deployment to Netlify
+
+The portfolio is configured for Netlify deployment:
+
+<Steps>
+  <Step title="Connect Repository">
+    1. Log in to [Netlify](https://app.netlify.com)
+    2. Click "Add new site" → "Import an existing project"
+    3. Connect your Git repository
+  </Step>
+
+  <Step title="Configure Build Settings">
+    Netlify will auto-detect Nuxt 3. Verify these settings:
+
+    - **Build command**: `npm run build`
+    - **Publish directory**: `.output/public`
+    - **Functions directory**: `.output/server`
+  </Step>
+
+  <Step title="Enable Netlify Forms">
+    The contact form uses Netlify Forms (already configured in the code):
+
+    ```html
+    <form
+      name="contact"
+      method="POST"
+      data-netlify="true"
+      data-netlify-recaptcha="true"
+    >
+      <!-- Form fields -->
+    </form>
+    ```
+
+    Enable reCAPTCHA in Netlify's form settings for spam protection.
+  </Step>
+
+  <Step title="Deploy">
+    Click "Deploy site" - your portfolio will be live in minutes!
+
+    <Check>
+      Netlify provides a deployment status badge you can add to your README.
+    </Check>
+  </Step>
+</Steps>
+
+<Warning>
+  Don't forget to update the site URL in `nuxt.config.ts` to match your Netlify domain.
+</Warning>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Port Already in Use">
+    If port 3000 is already in use, Nuxt will automatically try the next available port. You can also specify a custom port:
+
+    ```bash
+    PORT=3001 npm run dev
+    ```
+  </Accordion>
+
+  <Accordion title="Typed.js Not Animating">
+    Make sure the element with class `.typed` exists and Typed.js is initialized in the `onMounted` hook:
+
+    ```javascript
+    onMounted(() => {
+      const typed = new Typed('.typed', {
+        strings: skills,
+        typeSpeed: 150,
+        loop: true,
+      })
+    })
+    ```
+  </Accordion>
+
+  <Accordion title="Dark Mode Not Working">
+    Verify that `@nuxtjs/color-mode` is installed and configured in `nuxt.config.ts`:
+
+    ```typescript
+    modules: ['@nuxtjs/color-mode'],
+    colorMode: {
+      classSuffix: '',
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Images Not Loading">
+    Images should be in the `public/images/` directory. Reference them without the `public` prefix:
+
+    ```vue
+    <NuxtImg src="/images/misc/avatar.webp" alt="Avatar" />
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Explore Features"
+    icon="compass"
+    href="/features"
+  >
+    Learn about all the portfolio features in detail
+  </Card>
+  <Card
+    title="Customization Guide"
+    icon="palette"
+  >
+    Customize content, styling, and components (coming soon)
+  </Card>
+</CardGroup>

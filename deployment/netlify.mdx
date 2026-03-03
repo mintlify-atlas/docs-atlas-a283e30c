@@ -1,0 +1,307 @@
+---
+title: Deploy to Netlify
+description: Step-by-step guide to deploy your Vue.js portfolio website to Netlify
+---
+
+This guide walks you through deploying your Nuxt 3 portfolio application to Netlify. The project is currently deployed at [guillaume-cazin.fr](https://www.guillaume-cazin.fr/).
+
+## Why Netlify?
+
+Netlify offers several advantages for Nuxt applications:
+
+- Automatic deployments from Git
+- Built-in CI/CD pipeline
+- Global CDN distribution
+- Automatic HTTPS/SSL certificates
+- Instant cache invalidation
+- Preview deployments for pull requests
+- Excellent static site hosting performance
+
+## Deployment Methods
+
+### Method 1: Deploy via Git (Recommended)
+
+<Steps>
+  <Step title="Push to GitHub">
+    Ensure your code is pushed to a GitHub repository:
+
+    ```bash
+    git add .
+    git commit -m "Ready for deployment"
+    git push origin main
+    ```
+  </Step>
+
+  <Step title="Connect to Netlify">
+    1. Go to [Netlify](https://app.netlify.com/)
+    2. Click **"Add new site"** → **"Import an existing project"**
+    3. Choose your Git provider (GitHub, GitLab, or Bitbucket)
+    4. Authorize Netlify to access your repositories
+    5. Select your portfolio repository
+  </Step>
+
+  <Step title="Configure Build Settings">
+    Use the following build settings:
+
+    **Build command:**
+    ```bash
+    npm run generate
+    ```
+
+    **Publish directory:**
+    ```bash
+    .output/public
+    ```
+
+    **Base directory:** (leave empty)
+
+    These settings tell Netlify to:
+    - Run static site generation
+    - Serve files from the `.output/public` directory
+  </Step>
+
+  <Step title="Deploy">
+    Click **"Deploy site"** and Netlify will:
+    - Install dependencies
+    - Run the build command
+    - Deploy your site to a unique URL
+    - Provide a deployment URL (e.g., `random-name-123456.netlify.app`)
+  </Step>
+</Steps>
+
+### Method 2: Deploy via Netlify CLI
+
+<Steps>
+  <Step title="Install Netlify CLI">
+    Install the Netlify CLI globally:
+
+    ```bash
+    npm install -g netlify-cli
+    ```
+  </Step>
+
+  <Step title="Login to Netlify">
+    Authenticate with your Netlify account:
+
+    ```bash
+    netlify login
+    ```
+  </Step>
+
+  <Step title="Build the Project">
+    Generate the static site:
+
+    ```bash
+    npm run generate
+    ```
+  </Step>
+
+  <Step title="Deploy">
+    Deploy to Netlify:
+
+    ```bash
+    netlify deploy --prod
+    ```
+
+    When prompted:
+    - Select or create a site
+    - Specify publish directory: `.output/public`
+  </Step>
+</Steps>
+
+## Configuration
+
+### netlify.toml (Optional)
+
+While not required for this project, you can add a `netlify.toml` file to the root of your repository for more control:
+
+```toml
+[build]
+  command = "npm run generate"
+  publish = ".output/public"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+```
+
+### Environment Variables
+
+If your application uses environment variables:
+
+1. Go to **Site settings** → **Environment variables**
+2. Click **"Add a variable"**
+3. Add your variables (e.g., API keys, analytics IDs)
+4. Redeploy your site
+
+<Note>
+  The current deployment includes Google Analytics (ID: `G-8H48RCN70L`) configured in `nuxt.config.ts`. No additional environment variables are needed.
+</Note>
+
+## Custom Domain Setup
+
+The portfolio is deployed at `guillaume-cazin.fr`. To set up a custom domain:
+
+<Steps>
+  <Step title="Add Domain in Netlify">
+    1. Go to **Site settings** → **Domain management**
+    2. Click **"Add custom domain"**
+    3. Enter your domain (e.g., `guillaume-cazin.fr`)
+    4. Click **"Verify"**
+  </Step>
+
+  <Step title="Configure DNS">
+    Update your domain's DNS settings with your provider:
+
+    **For apex domain (guillaume-cazin.fr):**
+    ```
+    A Record: 75.2.60.5
+    ```
+
+    **For www subdomain:**
+    ```
+    CNAME: guillaume-cazin.netlify.app
+    ```
+  </Step>
+
+  <Step title="Enable HTTPS">
+    Netlify automatically provisions an SSL certificate via Let's Encrypt. This usually takes a few minutes after DNS propagation.
+  </Step>
+</Steps>
+
+## Deployment Status
+
+Monitor your deployments with the Netlify status badge. The current status is:
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/8789a72a-eaf2-4390-a329-c006674c525f/deploy-status)](https://app.netlify.com/sites/guillaume-cazin/deploys)
+
+You can add this badge to your README:
+
+```markdown
+[![Netlify Status](https://api.netlify.com/api/v1/badges/YOUR-BADGE-ID/deploy-status)](https://app.netlify.com/sites/YOUR-SITE-NAME/deploys)
+```
+
+## Automatic Deployments
+
+Once connected to Git, Netlify automatically deploys when:
+
+- You push to your main branch (production deployment)
+- You create a pull request (preview deployment)
+- You push to any branch (branch deployment, if enabled)
+
+### Deploy Previews
+
+Every pull request gets a unique preview URL:
+- Test changes before merging
+- Share with team members or clients
+- Automatic cleanup after PR is closed
+
+## Post-Deployment Checks
+
+After deployment, verify:
+
+<AccordionGroup>
+  <Accordion title="Site Functionality">
+    - All pages load correctly
+    - Navigation works properly
+    - Light/dark mode toggle functions
+    - Contact form submissions work
+    - Images load and are optimized
+  </Accordion>
+
+  <Accordion title="SEO & Performance">
+    - Sitemap is accessible at `/sitemap.xml`
+    - Meta tags are correct
+    - Google Analytics is tracking
+    - Lighthouse score is good (90+)
+  </Accordion>
+
+  <Accordion title="Security Headers">
+    - HTTPS is enabled
+    - Security headers are set
+    - Mixed content warnings are resolved
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+### Build Fails on Netlify
+
+1. Check the build logs in Netlify dashboard
+2. Ensure `package.json` has the correct build command
+3. Verify Node.js version compatibility:
+   ```toml
+   [build.environment]
+     NODE_VERSION = "18"
+   ```
+
+### 404 Errors
+
+If you get 404 errors on page refresh:
+
+1. Add a `_redirects` file to your `public` folder:
+   ```
+   /*    /index.html   200
+   ```
+
+2. Or use `netlify.toml` with redirect rules (shown above)
+
+### Images Not Loading
+
+1. Ensure images are in the `public` directory
+2. Check image paths are absolute (e.g., `/images/photo.webp`)
+3. Verify Sharp is installed for image optimization:
+   ```bash
+   npm install sharp
+   ```
+
+## Performance Optimization
+
+<CardGroup cols={2}>
+  <Card title="Enable Asset Optimization" icon="bolt">
+    Netlify automatically minifies CSS and JS. Enable in **Site settings** → **Build & deploy** → **Asset optimization**.
+  </Card>
+
+  <Card title="Configure Caching" icon="clock">
+    Netlify automatically caches assets. Configure cache headers in `netlify.toml` for fine-grained control.
+  </Card>
+
+  <Card title="Use Netlify Image CDN" icon="image">
+    Leverage Netlify's image CDN for automatic image optimization and transformation.
+  </Card>
+
+  <Card title="Enable Prerendering" icon="rocket">
+    The `nuxt generate` command prerenders all routes for maximum performance.
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Set Up Analytics" icon="chart-line" href="https://docs.netlify.com/monitor-sites/analytics/">
+    Monitor your site traffic with Netlify Analytics
+  </Card>
+
+  <Card title="Add Forms" icon="envelope" href="https://docs.netlify.com/forms/setup/">
+    Use Netlify Forms for contact form handling
+  </Card>
+
+  <Card title="Set Up Functions" icon="code" href="https://docs.netlify.com/functions/overview/">
+    Add serverless functions for dynamic features
+  </Card>
+
+  <Card title="Configure Webhooks" icon="webhook" href="https://docs.netlify.com/configure-builds/build-hooks/">
+    Trigger builds from external services
+  </Card>
+</CardGroup>
