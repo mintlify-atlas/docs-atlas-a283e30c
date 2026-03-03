@@ -1,0 +1,340 @@
+---
+title: 'Utility Components'
+description: 'Animation wrappers, background effects, and specialized content components'
+---
+
+# Utility Components
+
+Utility components provide specialized functionality like animations, background effects, and complex content sections.
+
+## Animate
+
+Animation wrapper component using AOS (Animate On Scroll) library for scroll-triggered animations.
+
+**Source:** `components/misc/Animate.vue`
+
+### Props
+
+<ParamField path="full" type="boolean" default="true">
+  Whether the component should take full width (`w-full`)
+</ParamField>
+
+<ParamField path="type" type="string" default="fade">
+  Animation type. Available values: `fade`, `zoom`, `flip`, `slide`
+</ParamField>
+
+<ParamField path="to" type="string" default="up">
+  Animation direction. Available values: `up`, `down`, `left`, `right`, `in`, `out`
+</ParamField>
+
+<ParamField path="duration" type="number" default="500">
+  Animation duration in milliseconds
+</ParamField>
+
+### Usage
+
+```vue
+<script setup>
+import Animate from '~/components/misc/Animate.vue'
+</script>
+
+<template>
+  <!-- Fade up animation (default) -->
+  <Animate>
+    <div>This will fade up on scroll</div>
+  </Animate>
+
+  <!-- Zoom in animation -->
+  <Animate type="zoom" to="in">
+    <div>This will zoom in on scroll</div>
+  </Animate>
+
+  <!-- Slide from right -->
+  <Animate type="fade" to="right" :duration="800">
+    <div>This will slide from right with 800ms duration</div>
+  </Animate>
+
+  <!-- Non-full width -->
+  <Animate :full="false" to="left">
+    <span>Inline animated element</span>
+  </Animate>
+</template>
+```
+
+### Implementation Details
+
+The component combines the `type` and `to` props to create AOS data attributes:
+
+```vue components/misc/Animate.vue:23-28
+<div
+  :class="{ 'w-full': full }"
+  :data-aos="`${type}-${to}`"
+  :data-aos-duration="duration"
+  data-aos-once="true"
+>
+```
+
+Animations only trigger once (`data-aos-once="true"`).
+
+---
+
+## BlobBackground
+
+Decorative animated background component for hero and section areas.
+
+**Source:** `components/misc/BlobBackground.vue`
+
+### Props
+
+<ParamField path="hero" type="boolean" default="false">
+  Whether this is a hero background (uses different image and sizing)
+</ParamField>
+
+<ParamField path="invert" type="boolean" default="false">
+  Whether to flip the background horizontally using Y-axis rotation
+</ParamField>
+
+### Usage
+
+```vue
+<script setup>
+import BlobBackground from '~/components/misc/BlobBackground.vue'
+import Section from '~/components/layout/Section.vue'
+</script>
+
+<template>
+  <!-- Hero background -->
+  <Section class="relative">
+    <BlobBackground hero />
+    <div class="relative z-10">
+      <!-- Hero content here -->
+    </div>
+  </Section>
+
+  <!-- Section background (normal) -->
+  <Section class="relative">
+    <BlobBackground />
+    <div class="relative z-10">
+      <!-- Section content here -->
+    </div>
+  </Section>
+
+  <!-- Section background (inverted) -->
+  <Section class="relative">
+    <BlobBackground :invert="true" />
+    <div class="relative z-10">
+      <!-- Section content here -->
+    </div>
+  </Section>
+</template>
+```
+
+### Styling
+
+- Uses absolute positioning with `inset-0` to cover the entire parent
+- Has `z-0` to stay behind content
+- Opacity is set to 25% (`opacity-25`)
+- Different background images in dark mode:
+  - Hero: `hero-dark.webp`
+  - Section: `section-dark.webp`
+
+<Note>
+The parent container must have `position: relative` and content should have a higher z-index (e.g., `z-10`) to appear above the background.
+</Note>
+
+---
+
+## Projects
+
+Complete project showcase component with filtering by category.
+
+**Source:** `components/misc/Projects.vue`
+
+### Props
+
+<ParamField path="category" type="string">
+  Optional pre-selected category filter
+</ParamField>
+
+### Project Interface
+
+```typescript components/misc/Projects.vue:16-24
+interface Project {
+  image: string
+  title: string
+  description: string
+  technologies: string[]
+  github?: string
+  url?: string
+  category: string
+}
+```
+
+### Category Interface
+
+```typescript components/misc/Projects.vue:26-29
+interface Category {
+  label: string
+  value: string
+}
+```
+
+### Available Categories
+
+- **all** - All projects (default)
+- **website** - Website projects
+- **web-application** - Web application projects
+- **resources** - Resource projects
+
+### Usage
+
+```vue
+<script setup>
+import Projects from '~/components/misc/Projects.vue'
+import Section from '~/components/layout/Section.vue'
+</script>
+
+<template>
+  <Section title="My Projects">
+    <!-- Shows all projects with filtering -->
+    <Projects />
+  </Section>
+
+  <!-- Pre-filter to show only websites -->
+  <Section title="Websites">
+    <Projects category="website" />
+  </Section>
+</template>
+```
+
+### Features
+
+1. **Category Filtering** - Filter buttons with project counts
+2. **Project Display** - Alternating left/right image layout
+3. **Animations** - Projects animate in from alternating directions
+4. **Technologies** - Badge display of technologies used
+5. **Links** - External links to project URL and GitHub repository
+6. **Responsive** - Mobile-friendly column layout, desktop row layout
+
+### Customization
+
+To add or modify projects, edit the `projects` array in `components/misc/Projects.vue:31-114`:
+
+```typescript
+const projects: Project[] = [
+  {
+    image: 'project-screenshot',
+    title: 'Project Name',
+    description: 'Project description',
+    technologies: ['Vue.js', 'TailwindCSS', 'Laravel'],
+    github: 'repo-name',
+    url: 'https://example.com',
+    category: 'website',
+  },
+  // ... more projects
+]
+```
+
+<Tip>
+Place project screenshots in `/public/images/projects/` directory with `.webp` format for optimal performance.
+</Tip>
+
+---
+
+## References
+
+Company references/logos gallery component.
+
+**Source:** `components/misc/References.vue`
+
+### Reference Interface
+
+```typescript components/misc/References.vue:4-7
+interface Reference {
+  name: string
+  image: string
+}
+```
+
+### Usage
+
+```vue
+<script setup>
+import References from '~/components/misc/References.vue'
+import Section from '~/components/layout/Section.vue'
+</script>
+
+<template>
+  <Section title="Trusted By">
+    <References />
+  </Section>
+</template>
+```
+
+### Features
+
+- **Responsive Grid** - 2 columns on mobile, 3 on tablet, flexible wrap on desktop
+- **Animations** - All logos animate up on scroll
+- **Image Optimization** - Uses Nuxt Image component for optimized loading
+
+### Customization
+
+To add or modify references, edit the `references` array in `components/misc/References.vue:9-34`:
+
+```typescript
+const references: Reference[] = [
+  {
+    name: 'Company Name',
+    image: 'company-logo',
+  },
+  // ... more references
+]
+```
+
+<Tip>
+Place company logos in `/public/images/references/` directory with `.webp` format. Logos should be around 128px width for consistency.
+</Tip>
+
+## Import Pattern
+
+All utility components follow the same import pattern:
+
+```vue
+<script setup>
+import Animate from '~/components/misc/Animate.vue'
+import BlobBackground from '~/components/misc/BlobBackground.vue'
+import Projects from '~/components/misc/Projects.vue'
+import References from '~/components/misc/References.vue'
+</script>
+```
+
+## Common Use Cases
+
+### Animated Section with Background
+
+```vue
+<Section class="relative" title="About Me">
+  <BlobBackground />
+  <div class="relative z-10">
+    <Animate type="fade" to="up">
+      <p>Your content here</p>
+    </Animate>
+  </div>
+</Section>
+```
+
+### Staggered Animations
+
+```vue
+<Stack>
+  <Animate to="left">
+    <Card title="First" />
+  </Animate>
+  <Animate to="right">
+    <Card title="Second" />
+  </Animate>
+  <Animate to="left">
+    <Card title="Third" />
+  </Animate>
+</Stack>
+```

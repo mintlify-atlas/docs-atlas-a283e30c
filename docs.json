@@ -36,7 +36,8 @@
           "components/cards",
           "components/elements",
           "components/layout",
-          "components/form"
+          "components/form",
+          "components/misc"
         ]
       },
       {
